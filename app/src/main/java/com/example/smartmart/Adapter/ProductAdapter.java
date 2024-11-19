@@ -1,22 +1,31 @@
-package com.example.smartmart.Adapter;// ProductAdapter.java
+package com.example.smartmart.Adapter;
+
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.smartmart.ChiTietSanPham;
 import com.example.smartmart.R;
-import com.example.smartmart.models.Product;
+import com.example.smartmart.models.SanPham;
 
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
-    private List<Product> productList;
+    private List<SanPham> productList;
 
-    public ProductAdapter(List<Product> productList) {
+    private Context context;
+
+    public ProductAdapter(List<SanPham> productList, Context context) {
         this.productList = productList;
+        this.context = context;
     }
 
     @NonNull
@@ -28,9 +37,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        Product product = productList.get(position);
-        holder.productName.setText(product.getName());
-        holder.productPrice.setText(product.getPrice());
+        SanPham product = productList.get(position);
+        holder.productName.setText(product.getTenSanPham());
+        holder.productPrice.setText(String.valueOf(product.getGia()));
+        Glide.with(holder.itemView.getContext())
+                .load(product.getImage_url())
+                .into(holder.productImage);
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ChiTietSanPham.class);
+            intent.putExtra("product_id", product.getMaSanPham());
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -39,10 +56,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
+        ImageView productImage;
         TextView productName, productPrice;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
+            productImage = itemView.findViewById(R.id.product_image);
             productName = itemView.findViewById(R.id.product_name);
             productPrice = itemView.findViewById(R.id.product_price);
         }
