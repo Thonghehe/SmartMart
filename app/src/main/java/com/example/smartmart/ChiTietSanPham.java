@@ -11,6 +11,8 @@ import com.bumptech.glide.Glide;
 import com.example.smartmart.DAO.SanPhamDAO;
 import com.example.smartmart.models.SanPham;
 
+import java.text.DecimalFormat;
+
 public class ChiTietSanPham extends AppCompatActivity {
     private SanPhamDAO sanPhamDAO;
 
@@ -35,7 +37,8 @@ public class ChiTietSanPham extends AppCompatActivity {
                 ImageView productImage = findViewById(R.id.product_image);
 
                 productName.setText(product.getTenSanPham());
-                productPrice.setText(String.valueOf(product.getGia()));
+                DecimalFormat decimalFormat = new DecimalFormat("#,##0,000");
+                productPrice.setText(decimalFormat.format(product.getGia())+ " đ");
                 productDescription.setText(product.getMoTa());
                 Glide.with(this).load(product.getImage_url()).into(productImage);
             }

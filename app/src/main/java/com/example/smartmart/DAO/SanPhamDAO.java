@@ -27,7 +27,7 @@ public class SanPhamDAO {
                     cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NAME)),
                     cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DESCRIPTION)),
-                    cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PRICE)),
+                    cursor.getFloat(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PRICE)),
                     cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_QUANTITY)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SOLD)),
@@ -79,7 +79,7 @@ public class SanPhamDAO {
                 product.setMaSanPham(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)));
                 product.setTenSanPham(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)));
                 product.setMoTa(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION)));
-                product.setGia(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COLUMN_PRICE)));
+                product.setGia(cursor.getFloat(cursor.getColumnIndex(DatabaseHelper.COLUMN_PRICE)));
                 product.setMaDanhMuc(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_CATEGORY)));
                 product.setSoLuong(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_QUANTITY)));
                 product.setSoLuongDaBan(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_SOLD)));
@@ -123,7 +123,7 @@ public class SanPhamDAO {
                 product.setMaSanPham(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)));
                 product.setTenSanPham(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)));
                 product.setMoTa(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION)));
-                product.setGia(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COLUMN_PRICE)));
+                product.setGia(cursor.getFloat(cursor.getColumnIndex(DatabaseHelper.COLUMN_PRICE)));
                 product.setMaDanhMuc(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_CATEGORY)));
                 product.setSoLuong(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_QUANTITY)));
                 product.setSoLuongDaBan(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_SOLD)));

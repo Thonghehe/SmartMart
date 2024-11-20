@@ -15,6 +15,7 @@ import com.example.smartmart.ChiTietSanPham;
 import com.example.smartmart.R;
 import com.example.smartmart.models.SanPham;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
@@ -39,7 +40,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         SanPham product = productList.get(position);
         holder.productName.setText(product.getTenSanPham());
-        holder.productPrice.setText(String.valueOf(product.getGia()));
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+        holder.productPrice.setText(decimalFormat.format(product.getGia())+ " đ");
         Glide.with(holder.itemView.getContext())
                 .load(product.getImage_url())
                 .into(holder.productImage);
