@@ -1,15 +1,16 @@
 package com.example.smartmart.DBHelper;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
+import com.example.smartmart.models.User;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "smartmart4.db";
+    private static final String DATABASE_NAME = "smartmart.db";
     private static final int DATABASE_VERSION = 1;
 
-    public static final String TABLE_PRODUCTS = "products";
+    public static final String TABLE_PRODUCTS = "SanPham";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_DESCRIPTION = "description";
@@ -40,7 +41,64 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TABLE_CREATE);
-        db.execSQL("INSERT INTO products (id,name,description,price,category,quantity,sold,date,image_url) " +
+        db.execSQL("CREATE TABLE User (\n" +
+                "    maUser INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    passWord TEXT NOT NULL,\n" +
+                "    nickName TEXT,\n" +
+                "    email TEXT,\n" +
+                "    soDienThoai TEXT,\n" +
+                "    diaChi TEXT,\n" +
+                "    vaiTro TEXT\n" +
+                ");");
+        db.execSQL("INSERT INTO User (maUser,passWord,nickName,email,soDienThoai,diaChi,vaiTro)" +
+                "VALUES (1,'thong212002','Kim Thong','thongnk21@gmail.com','0362014553','Phương Bản, Phụng Châu, Chương Mỹ, Hà Nội','ADMIN')");
+        db.execSQL("CREATE TABLE YeuThich (\n" +
+                "    maYeuThich INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    maKhachHang INTEGER,\n" +
+                "    maSanPham INTEGER,\n" +
+                "    tenSanPham TEXT\n" +
+                ");");
+        db.execSQL("CREATE TABLE LichSuBanHang (\n" +
+                "    maLichSu INTEGER PRIMARY KEY AUTOINCREMENT, \n" +
+                "    maSanPham INTEGER,\n" +
+                "    soLuong INTEGER,\n" +
+                "    ngayBanHang TEXT,\n" +
+                "    FOREIGN KEY (maSanPham) REFERENCES SanPham(maSanPham)\n" +
+                ");");
+        db.execSQL("CREATE TABLE DanhGia (\n" +
+                "    maDanhGia INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    maKhachHang INTEGER,\n" +
+                "    maSanPham INTEGER,\n" +
+                "    danhGia INTEGER,\n" +
+                "    binhLuan TEXT,\n" +
+                "    ngayDanhGia TEXT\n" +
+                ");");
+        db.execSQL("CREATE TABLE ChiTietDonHang (\n" +
+                "    maChiTietDonHang INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    maSanPham INTEGER,\n" +
+                "    maUser INTEGER,\n" +
+                "    soLuong INTEGER,\n" +
+                "    gia REAL\n" +
+                ");");
+        db.execSQL("CREATE TABLE DonHang (\n" +
+                "    maDonHang INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    maChiTietDonHang INTEGER,\n" +
+                "    maUser INTEGER,\n" +
+                "    maSanPham INTEGER,\n" +
+                "    ngayDatHang TEXT,\n" +
+                "    trangThai TEXT,\n" +
+                "    ngayThayDoiTrangThai TEXT,\n" +
+                "    tongGia REAL,\n" +
+                "    FOREIGN KEY (maChiTietDonHang) REFERENCES ChiTietDonHang(maChiTietDonHang),\n" +
+                "    FOREIGN KEY (maUser) REFERENCES User(maUser),\n" +
+                "    FOREIGN KEY (maSanPham) REFERENCES SanPham(maSanPham)\n" +
+                ");");
+        db.execSQL("CREATE TABLE DanhMucSanPham (\n" +
+                "    maDanhMuc INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    tenDanhMuc TEXT NOT NULL,\n" +
+                "    moTa TEXT\n" +
+                ");");
+        db.execSQL("INSERT INTO SanPham (id,name,description,price,category,quantity,sold,date,image_url) " +
                 "VALUES (1,'IPhone 16 ProMax 256GB','iPhone 16 series mang đến nhiều nâng cấp quan trọng so với iPhone 15 series, từ hiệu năng, camera, đến các tính năng tiên tiến khác. Được trang bị chip A18 mạnh mẽ hơn, iPhone 16 mang lại hiệu suất vượt trội so với iPhone 15 với chip A16, giúp cải thiện khả năng xử lý đồ họa và tiết kiệm năng lượng tốt hơn\u200B.\n" +
                 "\n" +
                 "iPhone 16 mang đến sự đột phá với camera \"Fusion\" 48 MP, giúp tạo ra những bức ảnh rõ nét, đặc biệt khi thiếu sáng. Tính năng quay video không gian và chụp ảnh macro biến những khoảnh khắc thành ảnh và video 3D sống động. Nổi bật không kém là nút Camera Control, hỗ trợ thao tác nhanh chóng và điều khiển cảm ứng, đồng thời tương thích với nhiều ứng dụng bên thứ ba.\n Chip Apple A18 Pro 6 nhân\n" +
@@ -54,7 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "Camera trước: 12 MP\n" +
                 "\n" +
                 "Pin 33 giờ, Sạc 20 W',34490000,'Iphone',50,10,'19-11-2024','https://cdn.tgdd.vn/Products/Images/42/329149/iphone-16-pro-max-black-thumb-600x600.jpg')");
-        db.execSQL("INSERT INTO products (id,name,description,price,category,quantity,sold,date,image_url) " +
+        db.execSQL("INSERT INTO SanPham (id,name,description,price,category,quantity,sold,date,image_url) " +
                 "VALUES (2,'IPhone 15 ProMax 256GB','Diện mạo đẳng cấp và cực kỳ sang trọng\n" +
                 "iPhone 15 Pro Max tiếp tục sẽ là một chiếc điện thoại có màn hình và mặt lưng phẳng đặc trưng đến từ nhà Apple, mang lại vẻ đẹp thanh lịch và sang trọng.\n" +
                 "\n" +
@@ -79,5 +137,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
         onCreate(db);
+    }
+    public User getUserByEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM User WHERE email = ?", new String[]{email});
+        if (cursor != null && cursor.moveToFirst()) {
+            User user = new User(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("maUser")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("passWord")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("nickName")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("email")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("soDienThoai")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("diaChi")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("vaiTro"))
+            );
+            cursor.close();
+            return user;
+        }
+        return null;
     }
 }

@@ -17,6 +17,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.smartmart.DBHelper.DatabaseHelper;
+import com.example.smartmart.models.User;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,13 +38,16 @@ public class MHdangnhap extends AppCompatActivity {
     //SharedPreferences
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
-
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mhdangnhap);
+        dbHelper = new DatabaseHelper(this);
+
+        // Assume you have a method to handle login
 
         FirebaseApp.initializeApp(this);
         //Mapping
@@ -64,7 +69,7 @@ public class MHdangnhap extends AppCompatActivity {
         btnDangNhap.setOnClickListener(v -> {
             String email = edtTaiKhoan.getText().toString();
             String password = edtMatKhau.getText().toString();
-
+            handleLogin();
             if(!email.equals("") && !password.equals("")){
                 loginUser(email, password);
             } else {
@@ -122,5 +127,32 @@ public class MHdangnhap extends AppCompatActivity {
             edtMatKhau.setText(savedPassword);
             chkGhiNho.setChecked(isRemembered);
         }
+    }
+    private void handleLogin() {
+        String email = edtTaiKhoan.getText().toString();
+        String password = edtMatKhau.getText().toString();
+
+        // Validate login credentials (this is just a placeholder, implement your own logic)
+        if (validateCredentials(email, password)) {
+            User user = dbHelper.getUserByEmail(email);
+            if (user != null) {
+                // Use the user information as needed
+                Log.d("User Info", "Name: " + user.getNickName() + ", Email: " + user.getEmail());
+                // Navigate to the next activity
+                Intent intent = new Intent(MHdangnhap.this, MainActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(MHdangnhap.this, "User not found.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(MHdangnhap.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean validateCredentials(String email, String password) {
+        // Implement your own logic to validate the email and password
+        return true;
     }
 }
