@@ -9,13 +9,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity {
+public class LichSuMuaHang extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_lichsumuahang);
 
         Button btnFragment1 = findViewById(R.id.btndalayhang);
         Button btnFragment2 = findViewById(R.id.btnchogiaohang);
