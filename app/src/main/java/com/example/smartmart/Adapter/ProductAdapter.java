@@ -1,7 +1,9 @@
+// ProductAdapter.java
 package com.example.smartmart.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.smartmart.ChiTietSanPham;
 import com.example.smartmart.R;
 import com.example.smartmart.models.SanPham;
+import com.example.smartmart.models.User;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -21,12 +24,13 @@ import java.util.List;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
     private List<SanPham> productList;
-
     private Context context;
+    private User user;
 
-    public ProductAdapter(List<SanPham> productList, Context context) {
+    public ProductAdapter(List<SanPham> productList, Context context, User user) {
         this.productList = productList;
         this.context = context;
+        this.user = user;
     }
 
     @NonNull
@@ -41,13 +45,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         SanPham product = productList.get(position);
         holder.productName.setText(product.getTenSanPham());
         DecimalFormat decimalFormat = new DecimalFormat("#,##0");
-        holder.productPrice.setText(decimalFormat.format(product.getGia())+ " đ");
+        holder.productPrice.setText(decimalFormat.format(product.getGia()) + " đ");
         Glide.with(holder.itemView.getContext())
                 .load(product.getImage_url())
                 .into(holder.productImage);
+
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChiTietSanPham.class);
             intent.putExtra("product_id", product.getMaSanPham());
+            intent.putExtra("user", user);
             context.startActivity(intent);
         });
     }

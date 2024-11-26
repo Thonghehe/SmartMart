@@ -7,16 +7,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.smartmart.models.User;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "smartmart.db";
+    private static final String DATABASE_NAME = "smartmart3.db";
     private static final int DATABASE_VERSION = 1;
 
     public static final String TABLE_PRODUCTS = "SanPham";
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_ID = "maSanPham";
+    public static final String COLUMN_NAME = "tenSanPham";
     public static final String COLUMN_DESCRIPTION = "description";
-    public static final String COLUMN_PRICE = "price";
-    public static final String COLUMN_CATEGORY = "category";
-    public static final String COLUMN_QUANTITY = "quantity";
+    public static final String COLUMN_PRICE = "gia";
+    public static final String COLUMN_CATEGORY = "danhMuc";
+    public static final String COLUMN_QUANTITY = "soLuong";
     public static final String COLUMN_SOLD = "sold";
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_IMAGE_URL = "image_url";
@@ -51,7 +51,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "    vaiTro TEXT\n" +
                 ");");
         db.execSQL("INSERT INTO User (maUser,passWord,nickName,email,soDienThoai,diaChi,vaiTro)" +
-                "VALUES (1,'thong212002','Kim Thong','thongnk21@gmail.com','0362014553','Phương Bản, Phụng Châu, Chương Mỹ, Hà Nội','ADMIN')");
+                "VALUES (1,'thong212002','Kim Thong','thongnk21@gmail.com','0362014553','Phương Bản, Phụng Châu, Chương Mỹ, Hà Nội','ADMIN')," +
+                "(2,'hocbt123','Thái Học','hocbuj2001@gmail.com','0969097521','Đông Lâm,Tiền Hải, Thái Bình','KhachHang')");
+
         db.execSQL("CREATE TABLE YeuThich (\n" +
                 "    maYeuThich INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "    maKhachHang INTEGER,\n" +
@@ -75,9 +77,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ");");
         db.execSQL("CREATE TABLE ChiTietDonHang (\n" +
                 "    maChiTietDonHang INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    image_url Text,\n"+
                 "    maSanPham INTEGER,\n" +
+                "    tenSanPham Text,\n"+
                 "    maUser INTEGER,\n" +
                 "    soLuong INTEGER,\n" +
+                "    isChecked boolean,\n" +
                 "    gia REAL\n" +
                 ");");
         db.execSQL("CREATE TABLE DonHang (\n" +
@@ -98,7 +103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "    tenDanhMuc TEXT NOT NULL,\n" +
                 "    moTa TEXT\n" +
                 ");");
-        db.execSQL("INSERT INTO SanPham (id,name,description,price,category,quantity,sold,date,image_url) " +
+        db.execSQL("INSERT INTO SanPham (maSanPham,tenSanPham,description,gia,danhMuc,soLuong,sold,date,image_url) " +
                 "VALUES (1,'IPhone 16 ProMax 256GB','iPhone 16 series mang đến nhiều nâng cấp quan trọng so với iPhone 15 series, từ hiệu năng, camera, đến các tính năng tiên tiến khác. Được trang bị chip A18 mạnh mẽ hơn, iPhone 16 mang lại hiệu suất vượt trội so với iPhone 15 với chip A16, giúp cải thiện khả năng xử lý đồ họa và tiết kiệm năng lượng tốt hơn\u200B.\n" +
                 "\n" +
                 "iPhone 16 mang đến sự đột phá với camera \"Fusion\" 48 MP, giúp tạo ra những bức ảnh rõ nét, đặc biệt khi thiếu sáng. Tính năng quay video không gian và chụp ảnh macro biến những khoảnh khắc thành ảnh và video 3D sống động. Nổi bật không kém là nút Camera Control, hỗ trợ thao tác nhanh chóng và điều khiển cảm ứng, đồng thời tương thích với nhiều ứng dụng bên thứ ba.\n Chip Apple A18 Pro 6 nhân\n" +
@@ -112,7 +117,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "Camera trước: 12 MP\n" +
                 "\n" +
                 "Pin 33 giờ, Sạc 20 W',34490000,'Iphone',50,10,'19-11-2024','https://cdn.tgdd.vn/Products/Images/42/329149/iphone-16-pro-max-black-thumb-600x600.jpg')");
-        db.execSQL("INSERT INTO SanPham (id,name,description,price,category,quantity,sold,date,image_url) " +
+        db.execSQL("INSERT INTO SanPham (maSanPham,tenSanPham,description,gia,danhMuc,soLuong,sold,date,image_url) " +
                 "VALUES (2,'IPhone 15 ProMax 256GB','Diện mạo đẳng cấp và cực kỳ sang trọng\n" +
                 "iPhone 15 Pro Max tiếp tục sẽ là một chiếc điện thoại có màn hình và mặt lưng phẳng đặc trưng đến từ nhà Apple, mang lại vẻ đẹp thanh lịch và sang trọng.\n" +
                 "\n" +

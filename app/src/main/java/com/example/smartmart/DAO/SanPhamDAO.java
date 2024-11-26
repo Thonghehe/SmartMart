@@ -65,7 +65,6 @@ public class SanPhamDAO {
         values.put(DatabaseHelper.COLUMN_SOLD, product.getSoLuongDaBan());
         values.put(DatabaseHelper.COLUMN_DATE, product.getNgayThayDoiTrangThai());
         values.put(DatabaseHelper.COLUMN_IMAGE_URL, product.getImage_url());
-
         return database.insert(DatabaseHelper.TABLE_PRODUCTS, null, values);
     }
 
