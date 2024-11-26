@@ -1,3 +1,9 @@
+
+import android.os.Bundle;
+import android.view.MenuItem;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+
 package com.example.smartmart;// MainActivity.java
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,12 +15,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,10 +41,12 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     private UserDAO userDAO;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         drawerLayout = findViewById(R.id.drawer_layout);
         ImageView menuButton = findViewById(R.id.menu_button);
         menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
@@ -71,38 +79,37 @@ public class MainActivity extends AppCompatActivity {
         }
         navigationView.setNavigationItemSelectedListener(item -> {
             Fragment fragment = null;
-//            if (item.getItemId() == R.id.mQLPhieuMuon) {
-//                fragment = new QLPhieuMuonFragment();
-//            } else if (item.getItemId() == R.id.mQLLoaiSach) {
-//                fragment = new QLLoaiSachFragment();
-//            } else
-            if(item.getItemId() == R.id.mDangxuat) {
+            int id = item.getItemId();
+            if(id == R.id.mDangxuat) {
                 Intent intent = new Intent(MainActivity.this, MHdangnhap.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 return true;
-            }else if (item.getItemId() == R.id.taiKhoan) {
+            }else if (id == R.id.taiKhoan) {
                 Intent intent = new Intent(MainActivity.this, TaiKhoan.class);
                 intent.putExtra("user", user);
                 startActivity(intent);
                 return true;
-            }
-
-//            else if(item.getItemId() == R.id.mDoiMK){
-//                showDialogDoiMK();
-//            }else if(item.getItemId() == R.id.mTop10){
-//                fragment = new ThongKeFragment();
-//            } else if (item.getItemId() == R.id.mDoanhThu) {
-//                fragment = new ThongKeDoanhThuFragment();
-//            }else if (item.getItemId() == R.id.mQLThanhVien) {
-//                fragment = new QLThanhVienFragment();
-//            }else if (item.getItemId() == R.id.mQLSach) {
-//                fragment = new QLSachFragment();
-//            }
-
             drawerLayout.closeDrawer(GravityCompat.START);
-
-            return true;
+            return true;}else if (id == R.id.nav_product) {
+            Intent intent = new Intent(this, ProductManagementActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_category) {
+            loadFragment(new CategoryManagementFragment(), "Quản lý danh mục sản phẩm");
+        } else if (id == R.id.nav_order) {
+            Intent intent = new Intent(this, OrderManagementActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_customer) {
+            loadFragment(new CustomerManagementFragment(), "Quản lý khách hàng");
+        } else if (id == R.id.nav_support) {
+            loadFragment(new SupportFragment(), "Hỗ trợ chăm sóc khách hàng");
+        } else if (id == R.id.nav_product_stats) {
+            Intent intent = new Intent(this, ProductStatsActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_revenue) {
+            Intent intent = new Intent(this, RevenueActivity.class);
+            startActivity(intent);
+        }
         });
 
         searchInput.addTextChangedListener(new TextWatcher() {
@@ -132,4 +139,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
     }
+
 

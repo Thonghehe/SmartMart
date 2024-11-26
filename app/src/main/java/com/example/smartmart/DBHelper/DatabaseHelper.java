@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import com.example.smartmart.models.User;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -17,6 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PRICE = "gia";
     public static final String COLUMN_CATEGORY = "danhMuc";
     public static final String COLUMN_QUANTITY = "soLuong";
+
     public static final String COLUMN_SOLD = "sold";
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_IMAGE_URL = "image_url";
@@ -51,8 +53,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "    vaiTro TEXT\n" +
                 ");");
         db.execSQL("INSERT INTO User (maUser,passWord,nickName,email,soDienThoai,diaChi,vaiTro)" +
+
                 "VALUES (1,'thong212002','Kim Thong','thongnk21@gmail.com','0362014553','Phương Bản, Phụng Châu, Chương Mỹ, Hà Nội','ADMIN')," +
                 "(2,'hocbt123','Thái Học','hocbuj2001@gmail.com','0969097521','Đông Lâm,Tiền Hải, Thái Bình','KhachHang')");
+
 
         db.execSQL("CREATE TABLE YeuThich (\n" +
                 "    maYeuThich INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
@@ -98,12 +102,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "    FOREIGN KEY (maUser) REFERENCES User(maUser),\n" +
                 "    FOREIGN KEY (maSanPham) REFERENCES SanPham(maSanPham)\n" +
                 ");");
+
         db.execSQL("CREATE TABLE DanhMucSanPham (\n" +
                 "    maDanhMuc INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "    tenDanhMuc TEXT NOT NULL,\n" +
                 "    moTa TEXT\n" +
                 ");");
+
         db.execSQL("INSERT INTO SanPham (maSanPham,tenSanPham,description,gia,danhMuc,soLuong,sold,date,image_url) " +
+
                 "VALUES (1,'IPhone 16 ProMax 256GB','iPhone 16 series mang đến nhiều nâng cấp quan trọng so với iPhone 15 series, từ hiệu năng, camera, đến các tính năng tiên tiến khác. Được trang bị chip A18 mạnh mẽ hơn, iPhone 16 mang lại hiệu suất vượt trội so với iPhone 15 với chip A16, giúp cải thiện khả năng xử lý đồ họa và tiết kiệm năng lượng tốt hơn\u200B.\n" +
                 "\n" +
                 "iPhone 16 mang đến sự đột phá với camera \"Fusion\" 48 MP, giúp tạo ra những bức ảnh rõ nét, đặc biệt khi thiếu sáng. Tính năng quay video không gian và chụp ảnh macro biến những khoảnh khắc thành ảnh và video 3D sống động. Nổi bật không kém là nút Camera Control, hỗ trợ thao tác nhanh chóng và điều khiển cảm ứng, đồng thời tương thích với nhiều ứng dụng bên thứ ba.\n Chip Apple A18 Pro 6 nhân\n" +
@@ -117,11 +124,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "Camera trước: 12 MP\n" +
                 "\n" +
                 "Pin 33 giờ, Sạc 20 W',34490000,'Iphone',50,10,'19-11-2024','https://cdn.tgdd.vn/Products/Images/42/329149/iphone-16-pro-max-black-thumb-600x600.jpg')");
+
         db.execSQL("INSERT INTO SanPham (maSanPham,tenSanPham,description,gia,danhMuc,soLuong,sold,date,image_url) " +
                 "VALUES (2,'IPhone 15 ProMax 256GB','Diện mạo đẳng cấp và cực kỳ sang trọng\n" +
                 "iPhone 15 Pro Max tiếp tục sẽ là một chiếc điện thoại có màn hình và mặt lưng phẳng đặc trưng đến từ nhà Apple, mang lại vẻ đẹp thanh lịch và sang trọng.\n" +
                 "\n" +
                 "Chất liệu chủ đạo của iPhone 15 Pro Max vẫn là khung kim loại và mặt lưng kính cường lực, tạo nên sự bền bỉ và chắc chắn. Tuy nhiên, với công nghệ tiên tiến, khung này đã được nâng cấp thành chất liệu titanium thay vì thép không gỉ hay nhôm ở những thế hệ trước." +
+
                 "\n" +
                 "Chip Apple A17 Pro 6 nhân\n" +
                 "\n" +
@@ -134,6 +143,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "Camera trước: 12 MP\n" +
                 "\n" +
                 "Pin 4422 mAh, Sạc 20 W',25990000,'Iphone',50,10,'12-6-2024','https://cdn.tgdd.vn/Products/Images/42/305659/iphone-15-pro-max-black-thumbnew-600x600.jpg')");
+
+        db.execSQL("INSERT INTO DonHang (ngayDatHang, trangThai, tongGia) VALUES ('2024-11-25', 'Đang giao', 100000);");
+        db.execSQL("INSERT INTO DonHang (ngayDatHang, trangThai, tongGia) VALUES ('2024-11-24', 'Đã giao', 200000);");
+        db.execSQL("INSERT INTO DonHang (ngayDatHang, trangThai, tongGia) VALUES ('2024-11-23', 'Đang giao', 150000);");
+        db.execSQL("INSERT INTO DonHang (ngayDatHang, trangThai, tongGia) VALUES ('2024-11-22', 'Đã giao', 300000);");
+
+    }
+
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
+        db.execSQL("DROP TABLE IF EXISTS User");
+        db.execSQL("DROP TABLE IF EXISTS DonHang");
+        onCreate(db);
+    }
+
+    // Lấy danh sách tất cả đơn hàng
+    public List<Order> getAllOrders() {
+        List<Order> orders = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String query = "SELECT * FROM DonHang ORDER BY ngayDatHang DESC";
+            cursor = db.rawQuery(query, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    int id = cursor.getInt(cursor.getColumnIndexOrThrow("maDonHang"));
+                    String orderDate = cursor.getString(cursor.getColumnIndexOrThrow("ngayDatHang"));
+                    String status = cursor.getString(cursor.getColumnIndexOrThrow("trangThai"));
+                    double totalAmount = cursor.getDouble(cursor.getColumnIndexOrThrow("tongGia"));
+
+                    orders.add(new Order(id, orderDate, totalAmount, status));
+                } while (cursor.moveToNext());
+            }
+
+            // Ghi log kiểm tra số lượng đơn hàng
+            System.out.println("Số lượng đơn hàng: " + orders.size());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+        return orders;
+    }
+
+
+
     }
 
 
@@ -143,6 +203,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
         onCreate(db);
     }
+
     public User getUserByEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM User WHERE email = ?", new String[]{email});

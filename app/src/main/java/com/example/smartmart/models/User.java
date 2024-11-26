@@ -1,8 +1,10 @@
 package com.example.smartmart.models;
 
+
 import java.io.Serializable;
 
 public class User implements Serializable {
+
     private int maUser;
     private String passWord;
     private String nickName;
@@ -11,7 +13,9 @@ public class User implements Serializable {
     private String diaChi;
     private String vaiTro;
 
+
     public User (int maUser, String passWord, String nickName, String email, String soDienThoai, String diaChi, String vaiTro) {
+
         this.maUser = maUser;
         this.passWord = passWord;
         this.nickName = nickName;
@@ -21,7 +25,9 @@ public class User implements Serializable {
         this.vaiTro = vaiTro;
     }
 
+
     // Getters and setters
+
     public int getMaUser() {
         return maUser;
     }

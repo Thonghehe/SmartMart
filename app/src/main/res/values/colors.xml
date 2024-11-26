@@ -2,6 +2,23 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="blue_500">#2196F3</color>
+    <color name="blue">#0000FF</color>
+    <color name="red">#FF0000</color>
+    <color name="gray">#888888</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="background_white">#FFFFFF</color>
+    <color name="background_light_grey">#FAFAFA</color>
+    <color name="navigation_header_background">#3F51B5</color>
+
+
+    <!-- Thêm màu nền xám cho fragment -->
+    <color name="background_grey">#F5F5F5</c
     <color name="main_color">#29B6F6</color>
     <color name="clormain">#E5F1EE</color>
+
 </resources>

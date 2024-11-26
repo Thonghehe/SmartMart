@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#F5F5F5">
+
+    <!-- Back Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            android:contentDescription="Back"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sửa Sản Phẩm"
+            android:textSize="21sp"
+            android:textColor="@color/black"
+            android:textAllCaps="true"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
+
+
+    <!-- Image Placeholder -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#C0C0C0"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Product Name -->
+    <EditText
+        android:id="@+id/etProductName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên sản phẩm"
+        android:background="@drawable/bg_edittext"
+        android:padding="12dp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Product Price -->
+    <EditText
+        android:id="@+id/etProductPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Giá"
+        android:inputType="numberDecimal"
+        android:background="@drawable/bg_edittext"
+        android:padding="12dp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Product Description -->
+    <EditText
+        android:id="@+id/etProductDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mô tả sản phẩm"
+        android:background="@drawable/bg_edittext"
+        android:padding="12dp"
+        android:layout_marginBottom="12dp"
+        android:lines="3"
+        android:gravity="top" />
+
+    <!-- Quantity Selector -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btnDecreaseQuantity"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="-"
+            android:background="@drawable/bg_button" />
+
+        <TextView
+            android:id="@+id/tvQuantity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="12dp"
+            android:background="@drawable/bg_edittext"
+            android:text="2" />
+
+        <Button
+            android:id="@+id/btnIncreaseQuantity"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="+"
+            android:background="@drawable/bg_button" />
+    </LinearLayout>
+
+    <!-- Save Product Button -->
+    <Button
+        android:id="@+id/btnSaveProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lưu sản phẩm"
+        android:background="@drawable/bg_button_primary"
+        android:padding="16dp"
+        android:textColor="#FFFFFF" />
+</LinearLayout>
