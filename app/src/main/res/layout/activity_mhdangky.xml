@@ -5,34 +5,79 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MHdangnhap"
+    tools:context=".MHdangky"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="15px">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="296dp"
         android:src="@drawable/img_1" />
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilTaiKhoan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="Tài Khoản"/>
-    <EditText
+        app:errorEnabled="true"
+        app:hintEnabled="true"
+        android:layout_marginTop="10dp"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tiedtTaiKhoan"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Nhập email"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilMatKhau"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="mật khẩu"/>
-    <EditText
+        app:errorEnabled="true"
+        app:hintEnabled="true"
+        app:passwordToggleEnabled="true"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tiedtMatKhau"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mật khẩu"
+            android:inputType="textPassword"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilXacNhanMK"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="Nhập lại mật khẩu"/>
-    <Button
-        android:layout_width="wrap_content"
+        app:errorEnabled="true"
+        app:hintEnabled="true"
+        app:passwordToggleEnabled="true"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tiedtXacNhanMK"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Xác nhận mật khẩu"
+            android:inputType="textPassword"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDangKy"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Đăng Ký"
-        android:textColorHint="@color/white"
-        android:backgroundTint="@color/black"/>
+        android:text="Đăng ký"
+        app:cornerRadius="2dp"
+        android:backgroundTint="@color/main_color"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnQuayLai"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cornerRadius="2dp"
+        android:text="Quay lại"
+        android:textSize="14sp"
+        android:backgroundTint="#A09B9B"/>
 
 </LinearLayout>

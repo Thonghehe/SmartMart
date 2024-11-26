@@ -1,55 +1,97 @@
-package com.example.smartmart;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+
+package com.example.smartmart;// MainActivity.java
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import com.google.android.material.navigation.NavigationView;
-import com.example.smartmart.fragments.*;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.smartmart.Adapter.ProductAdapter;
+import com.example.smartmart.DAO.SanPhamDAO;
+import com.example.smartmart.DAO.UserDAO;
+import com.example.smartmart.models.SanPham;
+import com.example.smartmart.models.User;
+import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+    private SanPhamDAO sanphamDAO;
+    private ProductAdapter adapter;
+    private List<SanPham> productList = new ArrayList<>();
+    DrawerLayout drawerLayout;
+    private UserDAO userDAO;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        ImageView menuButton = findViewById(R.id.menu_button);
+        menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+        sanphamDAO = new SanPhamDAO(this);
+        userDAO = new UserDAO(this);
+        NavigationView navigationView;
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columns
+        User user = (User) getIntent().getSerializableExtra("user");
+        productList = sanphamDAO.getAllProducts();
+        if (productList != null) {
+            adapter = new ProductAdapter(productList, this,user);
+            recyclerView.setAdapter(adapter);
 
-        toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        if (savedInstanceState == null) {
-            // Khởi chạy ProductManagementActivity khi ứng dụng được mở
-            Intent intent = new Intent(this, ProductManagementActivity.class);
-            startActivity(intent);
         }
-    }
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        EditText searchInput = findViewById(R.id.search_bar);
+        navigationView = findViewById(R.id.navigationView);
+        View headerLayout = navigationView.getHeaderView(0);
 
 
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.nav_product) {
+        String email = user.getEmail();
+        if (email != null) {
+            User userName = userDAO.getUserByEmail(email);
+            if (userName != null) {
+                // Display user information in the header
+                TextView txtTen = headerLayout.findViewById(R.id.txtTen);
+                txtTen.setText("Xin Chào " + userName.getNickName());
+            }
+        }
+        navigationView.setNavigationItemSelectedListener(item -> {
+            Fragment fragment = null;
+            int id = item.getItemId();
+            if(id == R.id.mDangxuat) {
+                Intent intent = new Intent(MainActivity.this, MHdangnhap.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                return true;
+            }else if (id == R.id.taiKhoan) {
+                Intent intent = new Intent(MainActivity.this, TaiKhoan.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                return true;
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;}else if (id == R.id.nav_product) {
             Intent intent = new Intent(this, ProductManagementActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_category) {
@@ -67,43 +109,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_revenue) {
             Intent intent = new Intent(this, RevenueActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_profile) {
-            loadFragment(new ProfileFragment(), "Thông tin cá nhân");
-        } else if (id == R.id.nav_change_password) {
-            loadFragment(new ChangePasswordFragment(), "Đổi mật khẩu");
-        } else if (id == R.id.nav_logout) {
-            // Xử lý đăng xuất ở đây
         }
+        });
 
-        drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                searchProducts(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+        ImageView cartButton = findViewById(R.id.cart_button);
+        cartButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, GioHang.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
+        });
     }
 
-    private void loadFragment(Fragment fragment, String title) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, fragment);
-        ft.commit();
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(title);
-        }
+    private void searchProducts(String keyword) {
+        productList.clear();
+        productList.addAll(sanphamDAO.searchProducts(keyword));
+        adapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (toggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-}
 
