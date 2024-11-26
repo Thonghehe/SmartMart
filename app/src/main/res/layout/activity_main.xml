@@ -36,6 +36,14 @@
                 android:textSize="18sp"
                 android:padding="16dp"
                 android:textColor="@android:color/black" />
+            <ImageView
+                android:id="@+id/cart_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_cart"
+                android:padding="16dp"
+                android:contentDescription="Cart button"
+                android:layout_gravity="end" />
         </androidx.appcompat.widget.Toolbar>
 
         <!-- Search bar -->
@@ -46,6 +54,8 @@
             android:hint="Tìm kiếm sản phẩm"
             android:padding="8dp"
             android:layout_below="@id/toolbar"/>
+
+        <!-- FrameLayout for fragments -->
 
         <!-- RecyclerView for products -->
         <androidx.recyclerview.widget.RecyclerView
@@ -59,8 +69,9 @@
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="start"
         app:menu="@menu/menu"
         app:headerLayout="@layout/header_layout"/>
+
 </androidx.drawerlayout.widget.DrawerLayout>

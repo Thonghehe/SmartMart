@@ -1,8 +1,10 @@
 package com.example.smartmart;// MainActivity.java
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smartmart.Adapter.ProductAdapter;
 import com.example.smartmart.DAO.SanPhamDAO;
+import com.example.smartmart.DAO.UserDAO;
 import com.example.smartmart.models.SanPham;
 import com.example.smartmart.models.User;
 import com.google.android.material.navigation.NavigationView;
@@ -28,8 +31,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private SanPhamDAO sanphamDAO;
     private ProductAdapter adapter;
-    private List<SanPham> productList;
+    private List<SanPham> productList = new ArrayList<>();
     DrawerLayout drawerLayout;
+    private UserDAO userDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,24 +43,31 @@ public class MainActivity extends AppCompatActivity {
         ImageView menuButton = findViewById(R.id.menu_button);
         menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
         sanphamDAO = new SanPhamDAO(this);
+        userDAO = new UserDAO(this);
         NavigationView navigationView;
-
-
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columns
-
+        User user = (User) getIntent().getSerializableExtra("user");
         productList = sanphamDAO.getAllProducts();
-        adapter = new ProductAdapter(productList,this);
-        recyclerView.setAdapter(adapter);
+        if (productList != null) {
+            adapter = new ProductAdapter(productList, this,user);
+            recyclerView.setAdapter(adapter);
+
+        }
         Toolbar toolbar = findViewById(R.id.toolbar);
         EditText searchInput = findViewById(R.id.search_bar);
         navigationView = findViewById(R.id.navigationView);
         View headerLayout = navigationView.getHeaderView(0);
 
-        User user = (User) getIntent().getSerializableExtra("user");
-        if (user != null) {
-            TextView txtTen = headerLayout.findViewById(R.id.txtTen);
-            txtTen.setText("Xin Chào "+user.getNickName());
+
+        String email = user.getEmail();
+        if (email != null) {
+            User userName = userDAO.getUserByEmail(email);
+            if (userName != null) {
+                // Display user information in the header
+                TextView txtTen = headerLayout.findViewById(R.id.txtTen);
+                txtTen.setText("Xin Chào " + userName.getNickName());
+            }
         }
         navigationView.setNavigationItemSelectedListener(item -> {
             Fragment fragment = null;
@@ -64,12 +75,20 @@ public class MainActivity extends AppCompatActivity {
 //                fragment = new QLPhieuMuonFragment();
 //            } else if (item.getItemId() == R.id.mQLLoaiSach) {
 //                fragment = new QLLoaiSachFragment();
-//            } else if(item.getItemId() == R.id.mDangxuat) {
-//                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                startActivity(intent);
-//                return true;
-//            }else if(item.getItemId() == R.id.mDoiMK){
+//            } else
+            if(item.getItemId() == R.id.mDangxuat) {
+                Intent intent = new Intent(MainActivity.this, MHdangnhap.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                return true;
+            }else if (item.getItemId() == R.id.taiKhoan) {
+                Intent intent = new Intent(MainActivity.this, TaiKhoan.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                return true;
+            }
+
+//            else if(item.getItemId() == R.id.mDoiMK){
 //                showDialogDoiMK();
 //            }else if(item.getItemId() == R.id.mTop10){
 //                fragment = new ThongKeFragment();
@@ -80,14 +99,6 @@ public class MainActivity extends AppCompatActivity {
 //            }else if (item.getItemId() == R.id.mQLSach) {
 //                fragment = new QLSachFragment();
 //            }
-
-            if (fragment != null) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.recyclerView, fragment)
-                        .commit();
-                toolbar.setTitle(item.getTitle());
-            }
 
             drawerLayout.closeDrawer(GravityCompat.START);
 
@@ -106,6 +117,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {}
         });
+        ImageView cartButton = findViewById(R.id.cart_button);
+        cartButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, GioHang.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
+        });
     }
 
     private void searchProducts(String keyword) {
@@ -113,5 +130,6 @@ public class MainActivity extends AppCompatActivity {
         productList.addAll(sanphamDAO.searchProducts(keyword));
         adapter.notifyDataSetChanged();
     }
+
     }
 

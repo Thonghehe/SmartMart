@@ -25,6 +25,11 @@
 
     <item android:title="Người dùng">
         <menu>
+            <item
+                android:id="@+id/taiKhoan"
+                android:title="Tài Khoản"
+                android:icon="@drawable/ic_profile"
+                />
             <item android:id="@+id/mDoiMK"
                 android:title="Đổi mật khẩu"
                 android:icon="@drawable/ic_key"/>
