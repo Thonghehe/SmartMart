@@ -29,17 +29,34 @@
             android:textStyle="bold"
             android:background="#FFFFFF"
             android:elevation="4dp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/cartRecyclerView"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_below="@id/header"
         android:layout_above="@id/buyButton"
-        android:padding="16dp"/>
+        android:padding="16dp">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/cartRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/totalPriceTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textSize="18sp"
+            android:padding="8dp"
+            android:gravity="center"/>
+    </LinearLayout>
     <Button
         android:id="@+id/buyButton"
         android:layout_width="match_parent"

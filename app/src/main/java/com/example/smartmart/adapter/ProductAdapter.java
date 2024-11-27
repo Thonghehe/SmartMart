@@ -1,45 +1,35 @@
-package com.example.smartmart.adapter;
+package com.example.smartmart.Adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.smartmart.EditProductActivity;
+import com.example.smartmart.ChiTietSanPham;
 import com.example.smartmart.R;
-import com.example.smartmart.models.Product;
+import com.example.smartmart.models.SanPham;
+import com.example.smartmart.models.User;
 
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
-    private List<Product> products;
+
+    private List<SanPham> productList;
     private Context context;
-    private NumberFormat currencyFormat;
-    private OnProductDeleteListener deleteListener;
+    private User user;
 
-    public interface OnProductDeleteListener {
-        void onDeleteProduct(Product product, int position);
-    }
-
-    public ProductAdapter(List<Product> products, Context context) {
-        this.products = products;
+    public ProductAdapter(List<SanPham> productList, Context context, User user) {
+        this.productList = productList;
         this.context = context;
-        this.currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-    }
-
-    public void setOnProductDeleteListener(OnProductDeleteListener listener) {
-        this.deleteListener = listener;
+        this.user = user;
     }
 
     @NonNull
@@ -51,67 +41,36 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        Product product = products.get(position);
-        holder.tvName.setText(product.getName());
-        holder.tvPrice.setText(currencyFormat.format(product.getPrice()));
-        holder.tvQuantity.setText("Số lượng: " + product.getQuantity());
+        SanPham product = productList.get(position);
+        holder.productName.setText(product.getTenSanPham());
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+        holder.productPrice.setText(decimalFormat.format(product.getGia()) + " đ");
+        Glide.with(holder.itemView.getContext())
+                .load(product.getImage_url())
+                .into(holder.productImage);
 
-        Glide.with(context)
-                .load(product.getImageUrl())
-                .placeholder(R.drawable.placeholder_image)
-                .into(holder.ivProduct);
-
-        // Xử lý sự kiện xóa sản phẩm
-        holder.btnDelete.setOnClickListener(v -> {
-            if (deleteListener != null) {
-                showDeleteConfirmationDialog(context, product, position);
-            }
-        });
-
-        // Xử lý sự kiện chỉnh sửa sản phẩm
-        holder.itemView.setOnLongClickListener(v -> {
-            Intent intent = new Intent(context, EditProductActivity.class);
-            intent.putExtra("PRODUCT_ID", product.getId());
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ChiTietSanPham.class);
+            intent.putExtra("product_id", product.getMaSanPham());
+            intent.putExtra("user", user);
             context.startActivity(intent);
-            return true;
         });
-    }
-
-    private void showDeleteConfirmationDialog(Context context, Product product, int position) {
-        new AlertDialog.Builder(context)
-                .setTitle("Xác nhận xóa")
-                .setMessage("Bạn có chắc chắn muốn xóa sản phẩm này?")
-                .setPositiveButton("Xóa", (dialog, which) -> {
-                    if (deleteListener != null) {
-                        deleteListener.onDeleteProduct(product, position);
-                    }
-                })
-                .setNegativeButton("Hủy", null)
-                .show();
     }
 
     @Override
     public int getItemCount() {
-        return products.size();
+        return productList.size();
     }
 
-    public void updateList(List<Product> newList) {
-        products = newList;
-        notifyDataSetChanged();
-    }
+    public static class ProductViewHolder extends RecyclerView.ViewHolder {
+        ImageView productImage;
+        TextView productName, productPrice;
 
-    static class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvPrice, tvQuantity;
-        ImageButton btnDelete;
-        ImageView ivProduct;
-
-        ProductViewHolder(View itemView) {
+        public ProductViewHolder(View itemView) {
             super(itemView);
-            tvName = itemView.findViewById(R.id.tvName);
-            tvPrice = itemView.findViewById(R.id.tvPrice);
-            tvQuantity = itemView.findViewById(R.id.tvQuantity);
-            btnDelete = itemView.findViewById(R.id.btnDelete);
-            ivProduct = itemView.findViewById(R.id.ivProduct);
+            productImage = itemView.findViewById(R.id.product_image);
+            productName = itemView.findViewById(R.id.product_name);
+            productPrice = itemView.findViewById(R.id.product_price);
         }
     }
 }

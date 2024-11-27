@@ -1,7 +1,9 @@
-// ChiTietDonHang.java
 package com.example.smartmart.models;
 
-public class ChiTietDonHang {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ChiTietDonHang implements Parcelable {
     private int maChiTietDonHang;
     private String tenSanPham;
     private String imageUrl;
@@ -87,5 +89,45 @@ public class ChiTietDonHang {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
+    }
+
+    protected ChiTietDonHang(Parcel in) {
+        maChiTietDonHang = in.readInt();
+        maSanPham = in.readInt();
+        tenSanPham = in.readString();
+        imageUrl = in.readString();
+        maUser = in.readInt();
+        soLuong = in.readInt();
+        gia = in.readDouble();
+        isChecked = in.readByte() != 0;
+    }
+
+    public static final Creator<ChiTietDonHang> CREATOR = new Creator<ChiTietDonHang>() {
+        @Override
+        public ChiTietDonHang createFromParcel(Parcel in) {
+            return new ChiTietDonHang(in);
+        }
+
+        @Override
+        public ChiTietDonHang[] newArray(int size) {
+            return new ChiTietDonHang[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(maChiTietDonHang);
+        dest.writeInt(maSanPham);
+        dest.writeString(tenSanPham);
+        dest.writeString(imageUrl);
+        dest.writeInt(maUser);
+        dest.writeInt(soLuong);
+        dest.writeDouble(gia);
+        dest.writeByte((byte) (isChecked ? 1 : 0));
     }
 }

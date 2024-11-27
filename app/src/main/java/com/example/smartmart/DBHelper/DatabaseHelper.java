@@ -5,7 +5,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.smartmart.models.Order;
 import com.example.smartmart.models.User;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "smartmart3.db";
@@ -144,10 +149,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "\n" +
                 "Pin 4422 mAh, Sạc 20 W',25990000,'Iphone',50,10,'12-6-2024','https://cdn.tgdd.vn/Products/Images/42/305659/iphone-15-pro-max-black-thumbnew-600x600.jpg')");
 
-        db.execSQL("INSERT INTO DonHang (ngayDatHang, trangThai, tongGia) VALUES ('2024-11-25', 'Đang giao', 100000);");
-        db.execSQL("INSERT INTO DonHang (ngayDatHang, trangThai, tongGia) VALUES ('2024-11-24', 'Đã giao', 200000);");
-        db.execSQL("INSERT INTO DonHang (ngayDatHang, trangThai, tongGia) VALUES ('2024-11-23', 'Đang giao', 150000);");
-        db.execSQL("INSERT INTO DonHang (ngayDatHang, trangThai, tongGia) VALUES ('2024-11-22', 'Đã giao', 300000);");
+
 
     }
 
@@ -194,15 +196,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
-    }
 
 
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
-        onCreate(db);
-    }
+
+
 
     public User getUserByEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();

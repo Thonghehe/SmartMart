@@ -17,7 +17,7 @@
 
 
     <!-- Thêm màu nền xám cho fragment -->
-    <color name="background_grey">#F5F5F5</c
+    <color name="background_grey">#F5F5F5</color>
     <color name="main_color">#29B6F6</color>
     <color name="clormain">#E5F1EE</color>
 

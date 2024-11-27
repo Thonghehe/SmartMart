@@ -22,15 +22,19 @@ import com.example.smartmart.R;
 import com.example.smartmart.models.ChiTietDonHang;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChiTietDonHangAdapter extends RecyclerView.Adapter<ChiTietDonHangAdapter.ViewHolder> {
     private List<ChiTietDonHang> chiTietDonHangList;
     private Context context;
+    private TextView totalPriceTextView;
 
-    public ChiTietDonHangAdapter(List<ChiTietDonHang> chiTietDonHangList, Context context) {
+    public ChiTietDonHangAdapter(List<ChiTietDonHang> chiTietDonHangList, Context context, TextView totalPriceTextView) {
         this.chiTietDonHangList = chiTietDonHangList;
         this.context = context;
+        this.totalPriceTextView = totalPriceTextView;
+        updateTotalPrice();
     }
 
     @NonNull
@@ -42,29 +46,39 @@ public class ChiTietDonHangAdapter extends RecyclerView.Adapter<ChiTietDonHangAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ChiTietDonHang chiTietDonHang = chiTietDonHangList.get(position);
+        ChiTietDonHang chiTietDonHang = chiTietDonHangList.get(holder.getAdapterPosition());
         holder.productName.setText(chiTietDonHang.getTenSanPham());
         DecimalFormat decimalFormat = new DecimalFormat("#,##0,000");
         holder.productPrice.setText(decimalFormat.format(chiTietDonHang.getGia()) + " đ");
         holder.quantityEditText.setText(String.valueOf(chiTietDonHang.getSoLuong()));
         holder.checkBox.setChecked(chiTietDonHang.isChecked());
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> chiTietDonHang.setChecked(isChecked));
         Glide.with(context).load(chiTietDonHang.getImageUrl()).into(holder.productImage);
 
         holder.minusButton.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
             int quantity = Integer.parseInt(holder.quantityEditText.getText().toString());
             if (quantity > 1) {
                 quantity--;
                 holder.quantityEditText.setText(String.valueOf(quantity));
-                chiTietDonHang.setSoLuong(quantity);
+                chiTietDonHangList.get(currentPosition).setSoLuong(quantity);
+                updateChiTietSanPham(chiTietDonHangList.get(currentPosition));
+                holder.itemView.post(() -> notifyItemChanged(currentPosition));
+                updateTotalPrice();
             }
         });
 
         holder.plusButton.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
             int quantity = Integer.parseInt(holder.quantityEditText.getText().toString());
             quantity++;
             holder.quantityEditText.setText(String.valueOf(quantity));
-            chiTietDonHang.setSoLuong(quantity);
+            chiTietDonHangList.get(currentPosition).setSoLuong(quantity);
+            updateChiTietSanPham(chiTietDonHangList.get(currentPosition));
+            holder.itemView.post(() -> notifyItemChanged(currentPosition));
+            updateTotalPrice();
         });
+
         holder.quantityEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -79,9 +93,12 @@ public class ChiTietDonHangAdapter extends RecyclerView.Adapter<ChiTietDonHangAd
             @Override
             public void afterTextChanged(Editable s) {
                 try {
+                    int currentPosition = holder.getAdapterPosition();
                     int quantity = Integer.parseInt(s.toString());
-                    chiTietDonHang.setSoLuong(quantity);
-                    holder.productPrice.setText(decimalFormat.format(chiTietDonHang.getGia() * quantity) + " đ");
+                    chiTietDonHangList.get(currentPosition).setSoLuong(quantity);
+                    updateChiTietSanPham(chiTietDonHangList.get(currentPosition));
+                    holder.itemView.post(() -> notifyItemChanged(currentPosition));
+                    updateTotalPrice();
                 } catch (NumberFormatException e) {
                     // Handle the exception if the input is not a valid number
                 }
@@ -89,17 +106,44 @@ public class ChiTietDonHangAdapter extends RecyclerView.Adapter<ChiTietDonHangAd
         });
 
         holder.deleteButton.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
             ChiTietDonHangDAO chiTietDonHangDAO = new ChiTietDonHangDAO(context);
-            chiTietDonHangDAO.deleteChiTietDonHang(chiTietDonHang.getMaChiTietDonHang());
-            chiTietDonHangList.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, chiTietDonHangList.size());
+            chiTietDonHangDAO.deleteChiTietDonHang(chiTietDonHangList.get(currentPosition).getMaChiTietDonHang());
+            chiTietDonHangList.remove(currentPosition);
+            holder.itemView.post(() -> {
+                notifyItemRemoved(currentPosition);
+                notifyItemRangeChanged(currentPosition, chiTietDonHangList.size());
+                updateTotalPrice();
+            });
         });
+    }
+
+    private void updateChiTietSanPham(ChiTietDonHang chiTietDonHang) {
+        ChiTietDonHangDAO chiTietDonHangDAO = new ChiTietDonHangDAO(context);
+        chiTietDonHangDAO.updateChiTietDonHang(chiTietDonHang);
+    }
+
+    private void updateTotalPrice() {
+        double totalPrice = 0;
+        for (ChiTietDonHang chiTietDonHang : chiTietDonHangList) {
+            totalPrice += chiTietDonHang.getGia() * chiTietDonHang.getSoLuong();
+        }
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0,000");
+        totalPriceTextView.setText("Tổng đơn hàng: "+decimalFormat.format(totalPrice) + " đ");
     }
 
     @Override
     public int getItemCount() {
         return chiTietDonHangList.size();
+    }
+    public List<ChiTietDonHang> getCheckedProducts() {
+        List<ChiTietDonHang> checkedProducts = new ArrayList<>();
+        for (ChiTietDonHang product : chiTietDonHangList) {
+            if (product.isChecked()) {
+                checkedProducts.add(product);
+            }
+        }
+        return checkedProducts;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
