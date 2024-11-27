@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.smartmart.DBHelper.DatabaseHelper;
 import com.example.smartmart.models.ChiTietDonHang;
+import com.example.smartmart.models.DonHang;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,5 +82,25 @@ public class ChiTietDonHangDAO {
         }
 
         return chiTietDonHangList;
+    }
+    public void insertDonHang(DonHang donHang) {
+        ContentValues values = new ContentValues();
+        values.put("maChiTietDonHang", donHang.getMaChiTietDonHang());
+        values.put("maUser", donHang.getMaUser());
+        values.put("maSanPham", donHang.getMaSanPham());
+        values.put("ngayDatHang", donHang.getNgayDatHang());
+        values.put("trangThai", donHang.getTrangThai());
+        values.put("ngayThayDoiTrangThai", donHang.getNgayThayDoiTrangThai());
+        values.put("tongGia", donHang.getTongGia());
+        db.insert("DonHang", null, values);
+    }
+
+    public void clearChiTietSanPham() {
+        db.delete("ChiTietDonHang", null, null);
+    }
+    public void updateChiTietDonHang(ChiTietDonHang chiTietDonHang) {
+        ContentValues values = new ContentValues();
+        values.put("soLuong", chiTietDonHang.getSoLuong());
+        db.update("ChiTietDonHang", values, "maChiTietDonHang = ?", new String[]{String.valueOf(chiTietDonHang.getMaChiTietDonHang())});
     }
 }
