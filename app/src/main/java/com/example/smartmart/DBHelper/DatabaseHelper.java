@@ -103,6 +103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "    trangThai TEXT,\n" +
                 "    ngayThayDoiTrangThai TEXT,\n" +
                 "    tongGia REAL,\n" +
+                "    phuongThucThanhToan TEXT,\n"+
                 "    FOREIGN KEY (maChiTietDonHang) REFERENCES ChiTietDonHang(maChiTietDonHang),\n" +
                 "    FOREIGN KEY (maUser) REFERENCES User(maUser),\n" +
                 "    FOREIGN KEY (maSanPham) REFERENCES SanPham(maSanPham)\n" +

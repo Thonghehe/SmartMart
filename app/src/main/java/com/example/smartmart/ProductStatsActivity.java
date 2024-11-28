@@ -7,11 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.smartmart.adapter.ProductStatsAdapter;
 import com.example.smartmart.models.ProductStat;
 import com.example.smartmart.DBHelper.DatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
+import com.example.smartmart.Adapter.ProductStatsAdapter;
 
 public class ProductStatsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;

@@ -1,4 +1,4 @@
-package com.example.smartmart.adapter;
+package com.example.smartmart.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
