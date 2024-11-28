@@ -1,24 +1,29 @@
 package com.example.smartmart;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.smartmart.Adapter.ProductPayAdapter;
 import com.example.smartmart.models.ChiTietDonHang;
 import com.example.smartmart.models.User;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class ThanhToan extends AppCompatActivity {
     private TextView tvRecipientInfo;
-    private TextView tvProductName;
-    private TextView tvProductPrice;
-    private TextView tvProductDesc;
-    private TextView tvShippingMethod;
-    private TextView tvShippingFee;
+
     private TextView tvPaymentDetails;
     private TextView tvTotalAmount;
+    private RecyclerView recyclerViewProducts;
+    private ProductPayAdapter productPayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +31,10 @@ public class ThanhToan extends AppCompatActivity {
         setContentView(R.layout.activity_thanh_toan);
 
         tvRecipientInfo = findViewById(R.id.tv_recipient_info);
-        tvProductName = findViewById(R.id.tv_product_name);
-        tvProductPrice = findViewById(R.id.tv_product_price);
-        tvProductDesc = findViewById(R.id.tv_product_desc);
-        tvShippingMethod = findViewById(R.id.tv_shipping_method);
-        tvShippingFee = findViewById(R.id.tv_shipping_fee);
+
         tvPaymentDetails = findViewById(R.id.tv_payment_details);
         tvTotalAmount = findViewById(R.id.tv_total_amount);
+        recyclerViewProducts = findViewById(R.id.recycler_view_products);
 
         // Retrieve user and checked products from the intent
         User user = (User) getIntent().getSerializableExtra("user");
@@ -40,35 +42,41 @@ public class ThanhToan extends AppCompatActivity {
 
         // Display user information
         if (user != null) {
-            String userInfo = "Name: " + user.getNickName() + "\n" +
-                    "Email: " + user.getEmail() + "\n" +
-                    "Phone: " + user.getSoDienThoai() + "\n" +
+            String userInfo =
                     "Address: " + user.getDiaChi();
             tvRecipientInfo.setText(userInfo);
         }
 
         // Display payment details
         if (checkedProducts != null && !checkedProducts.isEmpty()) {
-            ChiTietDonHang product = checkedProducts.get(0);
-            tvProductName.setText(product.getTenSanPham());
-            tvProductPrice.setText(String.valueOf(product.getGia()));
-            tvProductDesc.setText("Quantity: " + product.getSoLuong());
+            productPayAdapter = new ProductPayAdapter(checkedProducts);
+            recyclerViewProducts.setLayoutManager(new LinearLayoutManager(this));
+            recyclerViewProducts.setAdapter(productPayAdapter);
 
-            StringBuilder paymentDetails = new StringBuilder();
             double totalAmount = 0.0;
-            for (ChiTietDonHang p : checkedProducts) {
-                paymentDetails.append("Product: ").append(p.getTenSanPham())
-                        .append("\nPrice: ").append(p.getGia())
-                        .append("\nQuantity: ").append(p.getSoLuong())
-                        .append("\n\n");
-                totalAmount += p.getGia() * p.getSoLuong();
+            for (ChiTietDonHang product : checkedProducts) {
+                totalAmount += product.getGia() * product.getSoLuong();
             }
-            tvPaymentDetails.setText(paymentDetails.toString());
-            tvTotalAmount.setText("Total: " + totalAmount + " đ");
+            tvPaymentDetails.setText("Name: " + user.getNickName() + "\n" +
+                    "Email: " + user.getEmail() + "\n" +
+                    "Phone: " + user.getSoDienThoai() + "\n");
+            DecimalFormat decimalFormat = new DecimalFormat("#,##0,000");
+            tvTotalAmount.setText(
+                    "Tổng đơn hàng: " + decimalFormat.format(totalAmount) + " đ");
         }
 
         // Set shipping method and fee (example values)
-        tvShippingMethod.setText("Standard Shipping");
-        tvShippingFee.setText("Free");
+        Spinner spinnerPaymentMethod = findViewById(R.id.spinner_payment_method);
+        ArrayAdapter<CharSequence> paymentMethodAdapter = ArrayAdapter.createFromResource(this,
+                R.array.payment_methods, android.R.layout.simple_spinner_item);
+        paymentMethodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPaymentMethod.setAdapter(paymentMethodAdapter);
+        findViewById(R.id.backmain).setOnClickListener((v) -> {
+            Intent intent = new Intent();
+            intent.putExtra("user", user);
+            intent.setClass(ThanhToan.this, GioHang.class);
+            startActivity(intent);
+        });
     }
+
 }
