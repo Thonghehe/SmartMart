@@ -19,6 +19,8 @@ import com.example.smartmart.models.User;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,13 +75,14 @@ public class GioHang extends AppCompatActivity {
             donHang.setMaSanPham(checkedProducts.get(0).getMaSanPham()); // Example, set appropriate value
 
             // Convert long to String
-            String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String currentDate = formatter.format(new Date());
             donHang.setNgayDatHang(currentDate);
             donHang.setTrangThai("Pending");
             donHang.setNgayThayDoiTrangThai(null);
 
             donHang.setTongGia(calculateTotalPrice(checkedProducts));
-            donHangDAO.insertDonHang(donHang);
+
 //            chiTietDonHangDAO.clearChiTietSanPham();
 //            chiTietDonHangList.clear();
             adapter.notifyDataSetChanged();

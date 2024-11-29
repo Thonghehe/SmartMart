@@ -45,7 +45,7 @@ public class ProductStatsActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         // Truy vấn lấy sản phẩm bán chạy nhất
-        String query = "SELECT id, name, price, sold " +
+        String query = "SELECT maSanPham, tenSanPham, gia, sold " +
                 "FROM SanPham " +
                 "ORDER BY sold DESC " +
                 "LIMIT 5";
@@ -56,9 +56,9 @@ public class ProductStatsActivity extends AppCompatActivity {
             int rank = 1;
             do {
                 ProductStat stat = new ProductStat();
-                stat.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
-                stat.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
-                stat.setPrice(cursor.getDouble(cursor.getColumnIndexOrThrow("price")));
+                stat.setId(cursor.getInt(cursor.getColumnIndexOrThrow("maSanPham")));
+                stat.setName(cursor.getString(cursor.getColumnIndexOrThrow("tenSanPham")));
+                stat.setPrice(cursor.getDouble(cursor.getColumnIndexOrThrow("gia")));
                 stat.setSalesCount(cursor.getInt(cursor.getColumnIndexOrThrow("sold")));
                 stat.setRank(rank++);
                 productStats.add(stat);

@@ -1,5 +1,8 @@
 <!-- res/menu/menu.xml -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/mLichSuDonHang"
+        android:title="Lịch sử đơn hàng"
+        android:icon="@drawable/ic_ql"/>
     <item android:id="@+id/mQLSanPham"
         android:title="Quản lý sản phẩm"
         android:icon="@drawable/ic_ql"/>

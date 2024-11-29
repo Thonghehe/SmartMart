@@ -24,11 +24,12 @@
             android:contentDescription="Back button" />
 
         <TextView
+            android:id="@+id/name_orderdetail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Thanh Toán"
+            android:text="Chi Tiết Đơn Hàng 1"
             android:textSize="18sp"
             android:textColor="@android:color/black"
             android:fontFamily="sans-serif-medium" />
@@ -90,33 +91,31 @@
                 app:cardCornerRadius="8dp"
                 app:cardElevation="2dp">
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Phương thức thanh toán"
-                        android:textStyle="bold"
-                        android:textSize="16sp"/>
-
-                    <Spinner
-                        android:id="@+id/spinner_payment_method"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Phương thức thanh toán"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:id="@+id/payment_method"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
 
 
@@ -166,10 +165,10 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/btn_place_order"
+        android:id="@+id/btn_change_trangthai"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Đặt hàng"
+        android:text="Đã gửi hàng"
         android:textColor="#FFFFFF"
         android:background="#2196F3"
         android:layout_margin="16dp"/>

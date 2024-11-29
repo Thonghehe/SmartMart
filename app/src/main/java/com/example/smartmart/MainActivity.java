@@ -76,9 +76,17 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             Fragment fragment = null;
             int id = item.getItemId();
+            if(id==R.id.mLichSuDonHang){
+                Intent intent = new Intent(this, LichSuMuaHang.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                return true;
+            }
             if (id == R.id.mDangxuat) {
                 Intent intent = new Intent(MainActivity.this, MHdangnhap.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("user", user);
                 startActivity(intent);
                 return true;
             } else if (id == R.id.taiKhoan) {
@@ -86,16 +94,19 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("user", user);
                 startActivity(intent);
                 return true;
-            } else if (id == R.id.nav_product) {
+            } else if (id == R.id.mQLSanPham) {
 //                2
-            }  else if (id == R.id.nav_order) {
+            }  else if (id == R.id.mQLDonhang) {
                 Intent intent = new Intent(this, OrderManagementActivity.class);
+                intent.putExtra("user", user);
                 startActivity(intent);
-            }  else if (id == R.id.nav_product_stats) {
+            }  else if (id == R.id.mTopSP) {
                 Intent intent = new Intent(this, ProductStatsActivity.class);
+                intent.putExtra("user", user);
                 startActivity(intent);
-            } else if (id == R.id.nav_revenue) {
+            } else if (id == R.id.mDoanhThu) {
                 Intent intent = new Intent(this, RevenueActivity.class);
+                intent.putExtra("user", user);
                 startActivity(intent);
             }
             drawerLayout.closeDrawer(GravityCompat.START);
