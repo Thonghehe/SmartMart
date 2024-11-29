@@ -6,6 +6,7 @@ import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -19,7 +20,10 @@ public class LichSuMuaHang extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_lich_su_mua_hang);
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Lịch Sử Mua Hàng");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Button btnFragment1 = findViewById(R.id.btndalayhang);
         Button btnFragment2 = findViewById(R.id.btnchogiaohang);
 
@@ -53,5 +57,10 @@ public class LichSuMuaHang extends AppCompatActivity {
                 fragmentTransaction.commit();
             }
         });
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

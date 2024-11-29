@@ -1,5 +1,6 @@
 package com.example.smartmart;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartmart.Adapter.OrderAdapter;
 import com.example.smartmart.models.Order;
 import com.example.smartmart.DBHelper.DatabaseHelper;
+import com.example.smartmart.models.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,8 @@ public class OrderManagementActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Quản lý đơn hàng");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        User user = (User) getIntent().getSerializableExtra("user");
+
 
         // Cài đặt RecyclerView
         recyclerView = findViewById(R.id.recyclerViewOrders);
@@ -38,6 +43,7 @@ public class OrderManagementActivity extends AppCompatActivity {
 
         orderList = new ArrayList<>();
         dbHelper = new DatabaseHelper(this);
+
 
         // Load danh sách đơn hàng
         loadOrders();

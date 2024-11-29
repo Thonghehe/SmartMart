@@ -9,6 +9,7 @@ public class DonHang {
     private String trangThai;
     private String ngayThayDoiTrangThai;
     private double tongGia;
+    private String phuongThucThanhToan; // New field
 
     // Getters and Setters
     public int getMaDonHang() {
@@ -73,5 +74,13 @@ public class DonHang {
 
     public void setTongGia(double tongGia) {
         this.tongGia = tongGia;
+    }
+
+    public String getPhuongThucThanhToan() {
+        return phuongThucThanhToan;
+    }
+
+    public void setPhuongThucThanhToan(String phuongThucThanhToan) {
+        this.phuongThucThanhToan = phuongThucThanhToan;
     }
 }

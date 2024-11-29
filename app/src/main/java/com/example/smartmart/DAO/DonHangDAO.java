@@ -19,17 +19,6 @@ public class DonHangDAO {
         db = dbHelper.getWritableDatabase();
     }
 
-    public long insertDonHang(DonHang donHang) {
-        ContentValues values = new ContentValues();
-        values.put("maChiTietDonHang", donHang.getMaChiTietDonHang());
-        values.put("maUser", donHang.getMaUser());
-        values.put("maSanPham", donHang.getMaSanPham());
-        values.put("ngayDatHang", donHang.getNgayDatHang());
-        values.put("trangThai", donHang.getTrangThai());
-        values.put("ngayThayDoiTrangThai", donHang.getNgayThayDoiTrangThai());
-        values.put("tongGia", donHang.getTongGia());
-        return db.insert("DonHang", null, values);
-    }
 
     public int updateDonHang(DonHang donHang) {
         ContentValues values = new ContentValues();
@@ -40,6 +29,7 @@ public class DonHangDAO {
         values.put("trangThai", donHang.getTrangThai());
         values.put("ngayThayDoiTrangThai", donHang.getNgayThayDoiTrangThai());
         values.put("tongGia", donHang.getTongGia());
+        values.put("phuongThucThanhToan", donHang.getPhuongThucThanhToan());
         return db.update("DonHang", values, "maDonHang = ?", new String[]{String.valueOf(donHang.getMaDonHang())});
     }
 
@@ -59,6 +49,7 @@ public class DonHangDAO {
             donHang.setTrangThai(cursor.getString(cursor.getColumnIndexOrThrow("trangThai")));
             donHang.setNgayThayDoiTrangThai(cursor.getString(cursor.getColumnIndexOrThrow("ngayThayDoiTrangThai")));
             donHang.setTongGia(cursor.getDouble(cursor.getColumnIndexOrThrow("tongGia")));
+            donHang.setPhuongThucThanhToan(cursor.getString(cursor.getColumnIndexOrThrow("phuongThucThanhToan")));
             cursor.close();
             return donHang;
         }
@@ -79,10 +70,12 @@ public class DonHangDAO {
                 donHang.setTrangThai(cursor.getString(cursor.getColumnIndexOrThrow("trangThai")));
                 donHang.setNgayThayDoiTrangThai(cursor.getString(cursor.getColumnIndexOrThrow("ngayThayDoiTrangThai")));
                 donHang.setTongGia(cursor.getDouble(cursor.getColumnIndexOrThrow("tongGia")));
+                donHang.setPhuongThucThanhToan(cursor.getString(cursor.getColumnIndexOrThrow("phuongThucThanhToan")));
                 donHangList.add(donHang);
             } while (cursor.moveToNext());
             cursor.close();
         }
         return donHangList;
     }
+
 }
