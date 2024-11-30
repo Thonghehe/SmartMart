@@ -1,6 +1,7 @@
 package com.example.smartmart.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.smartmart.OrderDetailActivity;
 import com.example.smartmart.R;
 import com.example.smartmart.models.Order;
+import com.example.smartmart.models.User;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -40,15 +43,19 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         Order order = orders.get(position);
 
         // Set thông tin đơn hàng
-        holder.tvOrderNumber.setText("Đơn hàng #" + order.getId());
-        holder.tvOrderDate.setText("Ngày đặt: " + order.getOrderDate());
-        holder.tvOrderAmount.setText(currencyFormat.format(order.getTotalAmount()));
-
+        holder.tvOrderNumber.setText("Đơn hàng #" + order.getMaDonHang());
+        holder.tvOrderDate.setText("Ngày đặt: " + order.getNgayDatHang());
+        holder.tvOrderAmount.setText(currencyFormat.format(order.getTongGia()));
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, OrderDetailActivity.class);
+            intent.putExtra("orderId", order.getMaDonHang());
+            intent.putExtra("user", order.getMaUser());
+            context.startActivity(intent);
+        });
         // Hiển thị trạng thái đơn hàng
-        holder.tvOrderStatus.setText(order.getStatus());
-        holder.tvOrderStatus.setTextColor(getStatusColor(order.getStatus()));
+        holder.tvOrderStatus.setText(order.getTrangThai());
+        holder.tvOrderStatus.setTextColor(getStatusColor(order.getTrangThai()));
     }
-
 
     private int getStatusColor(String status) {
         if ("Đang giao".equals(status)) {
