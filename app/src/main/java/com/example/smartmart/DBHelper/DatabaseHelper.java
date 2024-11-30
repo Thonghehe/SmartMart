@@ -28,6 +28,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_IMAGE_URL = "image_url";
 
+    public static final String TABLE_ORDERS = "DonHang";
+    public static final String COLUMN_ORDER_ID = "maDonHang";
+    public static final String COLUMN_ORDER_DETAIL_ID = "maChiTietDonHang";
+    public static final String COLUMN_USER_ID = "maUser";
+    public static final String COLUMN_PRODUCT_ID = "maSanPham";
+    public static final String COLUMN_ORDER_DATE = "ngayDatHang";
+    public static final String COLUMN_STATUS = "trangThai";
+    public static final String COLUMN_STATUS_CHANGE_DATE = "ngayThayDoiTrangThai";
+    public static final String COLUMN_TOTAL_PRICE = "tongGia";
+    public static final String COLUMN_PAYMENT_METHOD = "phuongThucThanhToan";
+
+    private static final String TABLE_CREATE_ORDERS =
+            "CREATE TABLE " + TABLE_ORDERS + " (" +
+                    COLUMN_ORDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_ORDER_DETAIL_ID + " INTEGER, " +
+                    COLUMN_USER_ID + " INTEGER, " +
+                    COLUMN_PRODUCT_ID + " INTEGER, " +
+                    COLUMN_ORDER_DATE + " TEXT, " +
+                    COLUMN_STATUS + " TEXT, " +
+                    COLUMN_STATUS_CHANGE_DATE + " TEXT, " +
+                    COLUMN_TOTAL_PRICE + " REAL, " +
+                    COLUMN_PAYMENT_METHOD + " TEXT, " +
+                    "FOREIGN KEY (" + COLUMN_ORDER_DETAIL_ID + ") REFERENCES ChiTietDonHang(maChiTietDonHang), " +
+                    "FOREIGN KEY (" + COLUMN_USER_ID + ") REFERENCES User(maUser), " +
+                    "FOREIGN KEY (" + COLUMN_PRODUCT_ID + ") REFERENCES SanPham(maSanPham)" +
+                    ");";
+
     private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_PRODUCTS + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -150,6 +177,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "\n" +
                 "Pin 4422 mAh, Sạc 20 W',25990000,'Iphone',50,10,'12-6-2024','https://cdn.tgdd.vn/Products/Images/42/305659/iphone-15-pro-max-black-thumbnew-600x600.jpg')");
 
+        db.execSQL("INSERT INTO DonHang (maChiTietDonHang, maUser, maSanPham, ngayDatHang, trangThai, ngayThayDoiTrangThai, tongGia, phuongThucThanhToan) " +
+                "VALUES (1, 1, 1, '2024-11-01', 'Đang xử lý', '2024-11-02', 34490000, 'COD')");
+
+        db.execSQL("INSERT INTO DonHang (maChiTietDonHang, maUser, maSanPham, ngayDatHang, trangThai, ngayThayDoiTrangThai, tongGia, phuongThucThanhToan) " +
+                "VALUES (2, 2, 2, '2024-11-15', 'Đã giao', '2024-11-16', 25990000, 'Chuyển khoản')");
+
 
 
     }
@@ -170,22 +203,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
 
         try {
-            String query = "SELECT * FROM DonHang ORDER BY ngayDatHang DESC";
+            String query = "SELECT * FROM " + TABLE_ORDERS + " ORDER BY " + COLUMN_ORDER_DATE + " DESC";
             cursor = db.rawQuery(query, null);
 
             if (cursor.moveToFirst()) {
                 do {
-                    int id = cursor.getInt(cursor.getColumnIndexOrThrow("maDonHang"));
-                    String orderDate = cursor.getString(cursor.getColumnIndexOrThrow("ngayDatHang"));
-                    String status = cursor.getString(cursor.getColumnIndexOrThrow("trangThai"));
-                    double totalAmount = cursor.getDouble(cursor.getColumnIndexOrThrow("tongGia"));
+                    int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ORDER_ID));
+                    String orderDate = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ORDER_DATE));
+                    String status = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STATUS));
+                    double totalAmount = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_TOTAL_PRICE));
 
                     orders.add(new Order(id, orderDate, totalAmount, status));
                 } while (cursor.moveToNext());
             }
-
-            // Ghi log kiểm tra số lượng đơn hàng
-            System.out.println("Số lượng đơn hàng: " + orders.size());
 
         } catch (Exception e) {
             e.printStackTrace();

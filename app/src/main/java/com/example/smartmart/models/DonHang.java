@@ -9,8 +9,18 @@ public class DonHang {
     private String trangThai;
     private String ngayThayDoiTrangThai;
     private double tongGia;
+    private String phuongThucThanhToan;
 
     // Getters and Setters
+
+    public String getPhuongThucThanhToan() {
+        return phuongThucThanhToan;
+    }
+
+    public void setPhuongThucThanhToan(String phuongThucThanhToan) {
+        this.phuongThucThanhToan = phuongThucThanhToan;
+    }
+
     public int getMaDonHang() {
         return maDonHang;
     }
