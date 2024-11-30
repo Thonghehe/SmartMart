@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "smartmart2.db";
+    private static final String DATABASE_NAME = "smartmart3.db";
     private static final int DATABASE_VERSION = 1;
 
     public static final String TABLE_PRODUCTS = "SanPham";
@@ -122,10 +122,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createSanPhamTrongDonHangTable);
         db.execSQL("CREATE TABLE DanhMucSanPham (\n" +
                 "    maDanhMuc INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                "    tenDanhMuc TEXT NOT NULL,\n" +
-                "    moTa TEXT\n" +
+                "    tenDanhMuc TEXT NOT NULL\n" +
                 ");");
-
+        db.execSQL("INSERT INTO DanhMucSanPham(maDanhMuc,tenDanhMuc)" +
+                "VALUES(0,'IPhone')," +
+                "(1,'SamSung')," +
+                "(2,'XiaoMi')," +
+                "(3,'Sony')," +
+                "(4,'Oppo')," +
+                "(5,'HuaWei')");
         db.execSQL("INSERT INTO SanPham (maSanPham,tenSanPham,description,gia,danhMuc,soLuong,sold,date,image_url) " +
 
                 "VALUES (1,'IPhone 16 ProMax 256GB','iPhone 16 series mang đến nhiều nâng cấp quan trọng so với iPhone 15 series, từ hiệu năng, camera, đến các tính năng tiên tiến khác. Được trang bị chip A18 mạnh mẽ hơn, iPhone 16 mang lại hiệu suất vượt trội so với iPhone 15 với chip A16, giúp cải thiện khả năng xử lý đồ họa và tiết kiệm năng lượng tốt hơn\u200B.\n" +

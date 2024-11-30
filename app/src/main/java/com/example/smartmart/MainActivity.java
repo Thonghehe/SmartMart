@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private List<SanPham> productList = new ArrayList<>();
     private DrawerLayout drawerLayout;
     private UserDAO userDAO;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
         sanphamDAO = new SanPhamDAO(this);
         userDAO = new UserDAO(this);
-        NavigationView navigationView;
+
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columns
         User user = (User) getIntent().getSerializableExtra("user");
@@ -112,6 +114,15 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
+        String role = user.getVaiTro();
+        if(!role.equals("ADMIN")){
+            Menu menu = navigationView.getMenu();
+            menu.findItem(R.id.mQLSanPham).setVisible(false);
+            menu.findItem(R.id.mQLKhachhang).setVisible(false);
+            menu.findItem(R.id.mQLDonhang).setVisible(false);
+            menu.findItem(R.id.mTopSP).setVisible(false);
+            menu.findItem(R.id.mDoanhThu).setVisible(false);
+        }
 
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override

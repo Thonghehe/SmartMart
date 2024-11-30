@@ -6,13 +6,10 @@
     <item android:id="@+id/mQLSanPham"
         android:title="Quản lý sản phẩm"
         android:icon="@drawable/ic_ql"/>
-    <item android:id="@+id/mQLDanhmuc"
-        android:title="Quản lý danh mục"
-        android:icon="@drawable/ic_library_books"/>
     <item android:id="@+id/mQLKhachhang"
         android:title="Quản lý khách hàng"
         android:icon="@drawable/ic_kh"/>
-    <item android:id="@+id/mQLDonhang"
+        <item android:id="@+id/mQLDonhang"
         android:title="Quản lý đơn hàng"
         android:icon="@drawable/ic_people"/>
     <item android:title="Thống kê">
