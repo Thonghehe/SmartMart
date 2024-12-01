@@ -38,7 +38,42 @@ public class SanPhamDAO {
         }
         return product;
     }
+    public List<String> getAllCategories() {
+        List<String> categories = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + "DanhMucSanPham", null);
+        if (cursor.moveToFirst()) {
+            do {
+                categories.add(cursor.getString(cursor.getColumnIndexOrThrow("tenDanhMuc")));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
 
+        return categories;
+    }
+    public List<SanPham> getProductsByCategory(String category) {
+        List<SanPham> products = new ArrayList<>();
+        String query = "SELECT * FROM " + DatabaseHelper.TABLE_PRODUCTS + " WHERE " + DatabaseHelper.COLUMN_CATEGORY + " = ?";
+        Cursor cursor = database.rawQuery(query, new String[]{category});
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                SanPham product = new SanPham();
+                product.setMaSanPham(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)));
+                product.setTenSanPham(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)));
+                product.setMoTa(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION)));
+                product.setGia(cursor.getFloat(cursor.getColumnIndex(DatabaseHelper.COLUMN_PRICE)));
+                product.setMaDanhMuc(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_CATEGORY)));
+                product.setSoLuong(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_QUANTITY)));
+                product.setSoLuongDaBan(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_SOLD)));
+                product.setNgayThayDoiTrangThai(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DATE)));
+                product.setImage_url(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IMAGE_URL)));
+                products.add(product);
+            }
+            cursor.close();
+        }
+        return products;
+    }
     public void addSampleProducts() {
         for (int i = 1; i <= 8; i++) {
             SanPham product = new SanPham(
@@ -88,7 +123,6 @@ public class SanPhamDAO {
             }
             cursor.close();
         }
-
         return products;
     }
 

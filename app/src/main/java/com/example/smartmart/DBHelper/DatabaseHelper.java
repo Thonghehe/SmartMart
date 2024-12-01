@@ -15,7 +15,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "smartmart3.db";
+    private static final String DATABASE_NAME = "smartmart1.db";
     private static final int DATABASE_VERSION = 1;
 
     public static final String TABLE_PRODUCTS = "SanPham";
@@ -146,7 +146,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "\n" +
                 "Camera trước: 12 MP\n" +
                 "\n" +
-                "Pin 33 giờ, Sạc 20 W',34490000,'Iphone',50,10,'19-11-2024','https://cdn.tgdd.vn/Products/Images/42/329149/iphone-16-pro-max-black-thumb-600x600.jpg')");
+                "Pin 33 giờ, Sạc 20 W',34490000,'IPhone',50,10,'19-11-2024','https://cdn.tgdd.vn/Products/Images/42/329149/iphone-16-pro-max-black-thumb-600x600.jpg')");
 
         db.execSQL("INSERT INTO SanPham (maSanPham,tenSanPham,description,gia,danhMuc,soLuong,sold,date,image_url) " +
                 "VALUES (2,'IPhone 15 ProMax 256GB','Diện mạo đẳng cấp và cực kỳ sang trọng\n" +
@@ -165,7 +165,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "\n" +
                 "Camera trước: 12 MP\n" +
                 "\n" +
-                "Pin 4422 mAh, Sạc 20 W',25990000,'Iphone',50,10,'12-6-2024','https://cdn.tgdd.vn/Products/Images/42/305659/iphone-15-pro-max-black-thumbnew-600x600.jpg')");
+                "Pin 4422 mAh, Sạc 20 W',25990000,'IPhone',50,10,'12-6-2024','https://cdn.tgdd.vn/Products/Images/42/305659/iphone-15-pro-max-black-thumbnew-600x600.jpg')");
+        db.execSQL("INSERT INTO SanPham (maSanPham,tenSanPham,description,gia,danhMuc,soLuong,sold,date,image_url) " +
+
+                "VALUES (3,'IPhone 14','iPhone 14 128GB được xem là mẫu sxmartphone bùng nổ của nhà táo trong năm 2022, ấn tượng với ngoại hình trẻ trung, màn hình chất lượng đi kèm với những cải tiến về hệ điều hành và thuật toán xử lý hình ảnh, giúp máy trở thành cái tên thu hút được đông đảo người dùng quan tâm tại thời điểm ra mắt.\n Chip Apple A15 Bionic\n" +
+                "\n" +
+                "RAM: 6 GB\n" +
+                "\n" +
+                "Dung lượng: 128 GB\n" +
+                "\n" +
+                "Camera sau: 2 camera 12 MP\n" +
+                "\n" +
+                "Camera trước: 12 MP\n" +
+                "\n" +
+                "Pin 3279 mAh, Sạc 20 W',17590000,'IPhone',50,10,'19-11-2024','https://cdn.tgdd.vn/Products/Images/42/240259/iPhone-14-thumb-tim-1-600x600.jpg')");
 
 
 
