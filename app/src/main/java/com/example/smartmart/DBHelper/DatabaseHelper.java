@@ -1,5 +1,6 @@
 package com.example.smartmart.DBHelper;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -229,7 +230,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
-
+    public void updateOrderStatus(int maDonHang, int newStatus) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("trangThai", newStatus);
+        db.update("DonHang", values, "maDonHang = ?", new String[]{String.valueOf(maDonHang)});
+        db.close();
+    }
+    public List<Order> getOrdersByUser(int maUser, int... statuses) {
+        List<Order> orders = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        StringBuilder query = new StringBuilder("SELECT * FROM DonHang WHERE maUser = ? AND trangThai IN (");
+        for (int i = 0; i < statuses.length; i++) {
+            query.append(statuses[i]);
+            if (i < statuses.length - 1) {
+                query.append(",");
+            }
+        }
+        query.append(")");
+        Cursor cursor = db.rawQuery(query.toString(), new String[]{String.valueOf(maUser)});
+        if (cursor.moveToFirst()) {
+            do {
+                Order order = new Order(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("maDonHang")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("maUser")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("ngayDatHang")),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow("tongGia")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("trangThai")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("diaChiDatHang")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("phuongThucThanhToan"))
+                );
+                orders.add(order);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return orders;
+    }
 
 
 
