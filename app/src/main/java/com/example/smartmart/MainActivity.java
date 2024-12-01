@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private List<SanPham> productList = new ArrayList<>();
     private DrawerLayout drawerLayout;
     private UserDAO userDAO;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
         sanphamDAO = new SanPhamDAO(this);
         userDAO = new UserDAO(this);
-        NavigationView navigationView;
+
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columns
         User user = (User) getIntent().getSerializableExtra("user");
@@ -76,9 +78,17 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             Fragment fragment = null;
             int id = item.getItemId();
+            if(id==R.id.mLichSuDonHang){
+                Intent intent = new Intent(this, LichSuMuaHang.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                return true;
+            }
             if (id == R.id.mDangxuat) {
                 Intent intent = new Intent(MainActivity.this, MHdangnhap.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("user", user);
                 startActivity(intent);
                 return true;
             } else if (id == R.id.taiKhoan) {
@@ -86,21 +96,35 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("user", user);
                 startActivity(intent);
                 return true;
-            } else if (id == R.id.nav_product) {
-//                2
-            }  else if (id == R.id.nav_order) {
+            } else if (id == R.id.mQLSanPham) {
+                Intent intent = new Intent(this, ProductManagementActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+            }  else if (id == R.id.mQLDonhang) {
                 Intent intent = new Intent(this, OrderManagementActivity.class);
+                intent.putExtra("user", user);
                 startActivity(intent);
-            }  else if (id == R.id.nav_product_stats) {
+            }  else if (id == R.id.mTopSP) {
                 Intent intent = new Intent(this, ProductStatsActivity.class);
+                intent.putExtra("user", user);
                 startActivity(intent);
-            } else if (id == R.id.nav_revenue) {
+            } else if (id == R.id.mDoanhThu) {
                 Intent intent = new Intent(this, RevenueActivity.class);
+                intent.putExtra("user", user);
                 startActivity(intent);
             }
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
+        String role = user.getVaiTro();
+        if(!role.equals("ADMIN")){
+            Menu menu = navigationView.getMenu();
+            menu.findItem(R.id.mQLSanPham).setVisible(false);
+            menu.findItem(R.id.mQLKhachhang).setVisible(false);
+            menu.findItem(R.id.mQLDonhang).setVisible(false);
+            menu.findItem(R.id.mTopSP).setVisible(false);
+            menu.findItem(R.id.mDoanhThu).setVisible(false);
+        }
 
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override

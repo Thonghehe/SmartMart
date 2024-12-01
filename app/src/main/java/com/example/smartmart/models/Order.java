@@ -1,32 +1,79 @@
 package com.example.smartmart.models;
 
-public class Order {
-    private int id;
-    private String orderDate;
-    private double totalAmount;
-    private String status;
+import java.io.Serializable;
 
-    public Order(int id, String orderDate, double totalAmount, String status) {
-        this.id = id;
-        this.orderDate = orderDate;
-        this.totalAmount = totalAmount;
-        this.status = status;
+public class Order implements Serializable {
+    private int maDonHang;
+    private int maUser;
+    private String ngayDatHang;
+    private double tongGia;
+    private String trangThai;
+    private String diaChiDatHang;
+    private String phuongThucThanhToan;
+
+    public int getMaDonHang() {
+        return maDonHang;
     }
 
-    public int getId() {
-        return id;
+    public void setMaDonHang(int maDonHang) {
+        this.maDonHang = maDonHang;
     }
 
-    public String getOrderDate() {
-        return orderDate;
+    public int getMaUser() {
+        return maUser;
     }
 
-    public double getTotalAmount() {
-        return totalAmount;
+    public void setMaUser(int maUser) {
+        this.maUser = maUser;
     }
 
-    public String getStatus() {
-        return status;
+    public String getNgayDatHang() {
+        return ngayDatHang;
+    }
+
+    public void setNgayDatHang(String ngayDatHang) {
+        this.ngayDatHang = ngayDatHang;
+    }
+
+    public double getTongGia() {
+        return tongGia;
+    }
+
+    public void setTongGia(double tongGia) {
+        this.tongGia = tongGia;
+    }
+
+    public String getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(String trangThai) {
+        this.trangThai = trangThai;
+    }
+
+    public String getDiaChiDatHang() {
+        return diaChiDatHang;
+    }
+
+    public void setDiaChiDatHang(String diaChiDatHang) {
+        this.diaChiDatHang = diaChiDatHang;
+    }
+
+    public String getPhuongThucThanhToan() {
+        return phuongThucThanhToan;
+    }
+
+    public void setPhuongThucThanhToan(String phuongThucThanhToan) {
+        this.phuongThucThanhToan = phuongThucThanhToan;
+    }
+
+    public Order(int maDonHang, int maUser, String ngayDatHang, double tongGia, String trangThai, String diaChiDatHang, String phuongThucThanhToan) {
+        this.maDonHang = maDonHang;
+        this.maUser = maUser;
+        this.ngayDatHang = ngayDatHang;
+        this.tongGia = tongGia;
+        this.trangThai = trangThai;
+        this.diaChiDatHang = diaChiDatHang;
+        this.phuongThucThanhToan = phuongThucThanhToan;
     }
 }
-

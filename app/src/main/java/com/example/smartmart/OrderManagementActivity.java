@@ -1,50 +1,80 @@
 package com.example.smartmart;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.smartmart.DAO.DonHangDAO;
-import com.example.smartmart.adapter.OrderAdapter;
-import com.example.smartmart.models.DonHang;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.smartmart.Adapter.OrderAdapter;
+import com.example.smartmart.models.Order;
+import com.example.smartmart.DBHelper.DatabaseHelper;
+import com.example.smartmart.models.User;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderManagementActivity extends AppCompatActivity {
-    private DonHangDAO donHangDAO;
     private RecyclerView recyclerView;
-    private OrderAdapter orderAdapter;
-    private List<DonHang> orderList;
+    private OrderAdapter adapter;
+    private List<Order> orderList;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_management);
 
-        donHangDAO = new DonHangDAO(this);
+        // Cấu hình Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Quản lý đơn hàng");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        User user = (User) getIntent().getSerializableExtra("user");
+
+
+        // Cài đặt RecyclerView
         recyclerView = findViewById(R.id.recyclerViewOrders);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        FloatingActionButton fabAddOrder = findViewById(R.id.fabAddOrder);
-        fabAddOrder.setOnClickListener(v -> {
-            Intent intent = new Intent(OrderManagementActivity.this, AddOrderActivity.class);
-            startActivity(intent);
-        });
+        orderList = new ArrayList<>();
+        dbHelper = new DatabaseHelper(this);
 
+
+        // Load danh sách đơn hàng
         loadOrders();
+
+        // Kiểm tra danh sách có dữ liệu hay không
+        if (orderList.isEmpty()) {
+            // Hiển thị thông báo nếu không có đơn hàng
+            findViewById(R.id.emptyState).setVisibility(View.VISIBLE);
+        } else {
+            // Thiết lập adapter
+            adapter = new OrderAdapter(this, orderList);
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     private void loadOrders() {
-        orderList = donHangDAO.getAllDonHang();
-        orderAdapter = new OrderAdapter(orderList, this);
-        recyclerView.setAdapter(orderAdapter);
+        try {
+            orderList = dbHelper.getAllOrders(); // Lấy danh sách đơn hàng từ DBHelper
+
+            // Ghi log kiểm tra danh sách
+            System.out.println("Danh sách đơn hàng tải về: " + orderList.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        loadOrders();
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
+
 

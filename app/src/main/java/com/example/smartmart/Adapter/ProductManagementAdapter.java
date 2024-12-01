@@ -1,4 +1,4 @@
-package com.example.smartmart.adapter;
+package com.example.smartmart.Adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;

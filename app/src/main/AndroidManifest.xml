@@ -18,10 +18,7 @@
         android:theme="@style/Theme.SmartMart"
         tools:targetApi="31">
         <activity
-            android:name=".AddOrderActivity"
-            android:exported="false" />
-        <activity
-            android:name=".EditOrderActivity"
+            android:name=".OrderDetailActivity"
             android:exported="false" />
         <activity
             android:name=".ThanhToan"
@@ -41,9 +38,9 @@
         <activity
             android:name=".ProductStatsActivity"
             android:exported="false" />
-        <activity
-            android:name=".ProductManagementActivity"
-            android:exported="false" />
+         <activity
+         android:name=".ProductManagementActivity"
+         android:exported="false" />
         <activity
             android:name=".GioHang"
             android:exported="false" />
@@ -55,9 +52,6 @@
             android:exported="false" />
         <activity
             android:name=".Fragment.fgdalayhang"
-            android:exported="false" />
-        <activity
-            android:name=".LichSuMuaHang"
             android:exported="false" />
         <activity
             android:name=".DiaChi"
@@ -73,6 +67,9 @@
             android:exported="false" />
         <activity
             android:name=".ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LichSuMuaHang"
             android:exported="false" />
         <activity
             android:name=".MHdangky"
