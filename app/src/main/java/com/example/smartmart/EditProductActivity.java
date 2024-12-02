@@ -1,97 +1,130 @@
 package com.example.smartmart;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartmart.DBHelper.DatabaseHelper;
+import com.bumptech.glide.Glide;
+import com.example.smartmart.DAO.SanPhamDAO;
+import com.example.smartmart.models.SanPham;
 
 public class EditProductActivity extends AppCompatActivity {
-    private EditText etProductName, etProductPrice, etProductDescription;
-    private TextView tvQuantity;
-    private Button btnSaveProduct, btnIncreaseQuantity, btnDecreaseQuantity;
-    private ImageButton btnBack;
-    private DatabaseHelper dbHelper;
-    private int productId;
-    private int quantity;
+
+    private EditText edtProductName, edtProductPrice, edtProductDescription, edtImageUrl, edtQuantity;
+    private ImageView imgPreview;
+    private Button btnUpdateProduct;
+    private SanPhamDAO sanPhamDAO;
+
+    private String productId, productName, productDescription, productImage;
+    private double productPrice;
+    private int productQuantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_product);
 
-        etProductName = findViewById(R.id.etProductName);
-        etProductPrice = findViewById(R.id.etProductPrice);
-        etProductDescription = findViewById(R.id.etProductDescription);
-        tvQuantity = findViewById(R.id.tvQuantity);
-        btnSaveProduct = findViewById(R.id.btnSaveProduct);
-        btnIncreaseQuantity = findViewById(R.id.btnIncreaseQuantity);
-        btnDecreaseQuantity = findViewById(R.id.btnDecreaseQuantity);
-        btnBack = findViewById(R.id.btnBack);
-        dbHelper = new DatabaseHelper(this);
+        // Ánh xạ các thành phần giao diện
+        edtProductName = findViewById(R.id.edt_product_name);
+        edtProductPrice = findViewById(R.id.edt_product_price);
+        edtProductDescription = findViewById(R.id.edt_product_description);
+        edtImageUrl = findViewById(R.id.edt_image_url);
+        edtQuantity = findViewById(R.id.edt_quantity);
+        imgPreview = findViewById(R.id.img_preview);
+        btnUpdateProduct = findViewById(R.id.btn_update_product);
 
-        productId = getIntent().getIntExtra("PRODUCT_ID", -1);
-        loadProductDetails();
+        // Khởi tạo đối tượng DAO
+        sanPhamDAO = new SanPhamDAO(this);
 
-        btnIncreaseQuantity.setOnClickListener(v -> {
-            quantity++;
-            tvQuantity.setText(String.valueOf(quantity));
-        });
+        // Nhận thông tin từ Intent
+        Intent intent = getIntent();
+        productId = intent.getStringExtra("productId");
+        productName = intent.getStringExtra("productName");
+        productPrice = intent.getDoubleExtra("productPrice", 0);
+        productDescription = intent.getStringExtra("productDescription");
+        productImage = intent.getStringExtra("productImage");
+        productQuantity = intent.getIntExtra("productQuantity", 0);
+
+        // Hiển thị thông tin vào các trường
+        edtProductName.setText(productName);
+        edtProductPrice.setText(String.valueOf(productPrice));
+        edtProductDescription.setText(productDescription);
+        edtImageUrl.setText(productImage);
+        edtQuantity.setText(String.valueOf(productQuantity));
+
+        // Hiển thị ảnh sản phẩm
+        Glide.with(this).load(productImage).into(imgPreview);
+
+        // Cập nhật sản phẩm khi nhấn nút
+        btnUpdateProduct.setOnClickListener(v -> updateProduct());
+
+        // Xử lý nút Quay lại
+        ImageView btnBack = findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(v -> finish()); // Đóng Activity hiện tại và quay lại màn hình trước
+
+        // Xử lý sự kiện tăng giảm số lượng
+        Button btnDecreaseQuantity = findViewById(R.id.btn_decrease_quantity);
+        Button btnIncreaseQuantity = findViewById(R.id.btn_increase_quantity);
 
         btnDecreaseQuantity.setOnClickListener(v -> {
-            if (quantity > 1) {
-                quantity--;
-                tvQuantity.setText(String.valueOf(quantity));
+            int currentQuantity = Integer.parseInt(edtQuantity.getText().toString());
+            if (currentQuantity > 1) {  // Đảm bảo số lượng không nhỏ hơn 1
+                edtQuantity.setText(String.valueOf(currentQuantity - 1));
             }
         });
 
-        btnSaveProduct.setOnClickListener(v -> saveProduct());
+        btnIncreaseQuantity.setOnClickListener(v -> {
+            int currentQuantity = Integer.parseInt(edtQuantity.getText().toString());
+            edtQuantity.setText(String.valueOf(currentQuantity + 1));
+        });
 
-        btnBack.setOnClickListener(v -> finish());
+        // Xử lý sự kiện xem trước ảnh
+        Button btnPreviewImage = findViewById(R.id.btn_preview_image);
+        btnPreviewImage.setOnClickListener(v -> {
+            String imageUrl = edtImageUrl.getText().toString().trim();
+            if (!imageUrl.isEmpty()) {
+                Glide.with(this)
+                        .load(imageUrl)
+                        .into(imgPreview);
+            } else {
+                Toast.makeText(this, "Vui lòng nhập URL hình ảnh", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void loadProductDetails() {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(DatabaseHelper.TABLE_PRODUCTS, null, DatabaseHelper.COLUMN_ID + "=?",
-                new String[]{String.valueOf(productId)}, null, null, null);
+    private void updateProduct() {
+        // Lấy thông tin từ các trường nhập liệu
+        String updatedName = edtProductName.getText().toString().trim();
+        String updatedDescription = edtProductDescription.getText().toString().trim();
+        String updatedImageUrl = edtImageUrl.getText().toString().trim();
+        int updatedQuantity = Integer.parseInt(edtQuantity.getText().toString().trim());  // Đảm bảo nhập đúng giá trị số
+        double updatedPrice = Double.parseDouble(edtProductPrice.getText().toString().trim());
 
-        if (cursor != null && cursor.moveToFirst()) {
-            etProductName.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)));
-            etProductPrice.setText(String.valueOf(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COLUMN_PRICE))));
-            etProductDescription.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION)));
-            quantity = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_QUANTITY));
-            tvQuantity.setText(String.valueOf(quantity));
-            cursor.close();
-        }
-    }
+        // Tạo đối tượng SanPham với thông tin mới
+        SanPham updatedProduct = new SanPham(
+                Integer.parseInt(productId),
+                updatedName,
+                updatedDescription,
+                updatedPrice,
+                "",
+                updatedQuantity,
+                0, "",
+                updatedImageUrl
+        );
 
-    private void saveProduct() {
-        String name = etProductName.getText().toString();
-        double price = Double.parseDouble(etProductPrice.getText().toString());
-        String description = etProductDescription.getText().toString();
-
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COLUMN_NAME, name);
-        values.put(DatabaseHelper.COLUMN_PRICE, price);
-        values.put(DatabaseHelper.COLUMN_QUANTITY, quantity);
-        values.put(DatabaseHelper.COLUMN_DESCRIPTION, description);
-
-        int rowsAffected = db.update(DatabaseHelper.TABLE_PRODUCTS, values, DatabaseHelper.COLUMN_ID + "=?",
-                new String[]{String.valueOf(productId)});
-        if (rowsAffected > 0) {
-            Toast.makeText(this, "Sản phẩm đã được cập nhật", Toast.LENGTH_SHORT).show();
-            finish();
+        // Cập nhật sản phẩm trong cơ sở dữ liệu
+        int result = sanPhamDAO.updateProduct(updatedProduct);
+        if (result > 0) {
+            Toast.makeText(this, "Cập nhật sản phẩm thành công", Toast.LENGTH_SHORT).show();
+            finish(); // Quay lại Activity trước
         } else {
-            Toast.makeText(this, "Không thể cập nhật sản phẩm", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
         }
     }
 }

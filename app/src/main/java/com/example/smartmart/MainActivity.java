@@ -129,7 +129,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             } else if (id == R.id.mQLSanPham) {
-//                2
+                Intent intent = new Intent(this, ProductManagementActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
             }  else if (id == R.id.mQLDonhang) {
                 Intent intent = new Intent(this, OrderManagementActivity.class);
                 intent.putExtra("user", user);
