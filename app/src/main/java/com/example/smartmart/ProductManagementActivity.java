@@ -45,6 +45,7 @@ public class ProductManagementActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Quản lý sản phẩm");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Enable the back button
 
         // Cấu hình RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
@@ -91,13 +92,16 @@ public class ProductManagementActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
+//        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // Handle the back button click event
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 }
