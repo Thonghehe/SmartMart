@@ -1,5 +1,6 @@
 package com.example.smartmart;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.smartmart.Fragment.fgcholayhang;
 import com.example.smartmart.Fragment.fgdalayhang;
+import com.example.smartmart.models.User;
 
 public class LichSuMuaHang extends AppCompatActivity {
 
@@ -26,12 +28,14 @@ public class LichSuMuaHang extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Button btnFragment1 = findViewById(R.id.btndalayhang);
         Button btnFragment2 = findViewById(R.id.btnchogiaohang);
+        User user = (User) getIntent().getSerializableExtra("user");
+        int maUser = user.getMaUser();
 
         // Hiển thị fgdalayhang làm Fragment mặc định khi mở Activity
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragmentContainer, new fgdalayhang());
+            fragmentTransaction.replace(R.id.fragmentContainer, new fgdalayhang().newInstance(maUser));
             fragmentTransaction.commit();
         }
 
@@ -41,7 +45,7 @@ public class LichSuMuaHang extends AppCompatActivity {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragmentContainer, new fgdalayhang());
+                fragmentTransaction.replace(R.id.fragmentContainer, new fgdalayhang().newInstance(maUser));
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
@@ -52,15 +56,21 @@ public class LichSuMuaHang extends AppCompatActivity {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragmentContainer, new fgcholayhang());
+                fragmentTransaction.replace(R.id.fragmentContainer, fgcholayhang.newInstance(maUser));
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
     }
+
     @Override
     public boolean onSupportNavigateUp() {
-        onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        User user = (User) getIntent().getSerializableExtra("user");
+        intent.putExtra("user", user);
+        startActivity(intent);
+        finish();
         return true;
     }
 }

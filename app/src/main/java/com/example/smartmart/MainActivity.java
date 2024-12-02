@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
     private List<SanPham> productList = new ArrayList<>();
     private DrawerLayout drawerLayout;
     private UserDAO userDAO;
+    NavigationView navigationView;
+    private List<String> categoryList;
+
+    private Spinner spinnerCategories;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +57,13 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         ImageView menuButton = findViewById(R.id.menu_button);
         menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+        spinnerCategories = findViewById(R.id.spinnerCategories);
+
+
         sanphamDAO = new SanPhamDAO(this);
         userDAO = new UserDAO(this);
-        NavigationView navigationView;
+        categoryList = sanphamDAO.getAllCategories();
+        categoryList.add(0, "Tất cả sản phẩm");
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columns
         User user = (User) getIntent().getSerializableExtra("user");
@@ -59,11 +72,32 @@ public class MainActivity extends AppCompatActivity {
             adapter = new ProductAdapter(productList, this,user);
             recyclerView.setAdapter(adapter);
         }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategories.setAdapter(adapter);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         EditText searchInput = findViewById(R.id.search_bar);
         navigationView = findViewById(R.id.navigationView);
         View headerLayout = navigationView.getHeaderView(0);
+        spinnerCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCategory = categoryList.get(position);
+                if (selectedCategory.equals("Tất cả sản phẩm")) {
+                    productList.clear();
+                    productList.addAll(sanphamDAO.getAllProducts());
+                } else {
+                    filterProductsByCategory(selectedCategory);
+                }
+                adapter.notifyDataSetChanged();
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
         String email = user.getEmail();
         if (email != null) {
             User userName = userDAO.getUserByEmail(email);
@@ -112,6 +146,15 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
+        String role = user.getVaiTro();
+        if(!role.equals("ADMIN")){
+            Menu menu = navigationView.getMenu();
+            menu.findItem(R.id.mQLSanPham).setVisible(false);
+            menu.findItem(R.id.mQLKhachhang).setVisible(false);
+            menu.findItem(R.id.mQLDonhang).setVisible(false);
+            menu.findItem(R.id.mTopSP).setVisible(false);
+            menu.findItem(R.id.mDoanhThu).setVisible(false);
+        }
 
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -137,5 +180,12 @@ public class MainActivity extends AppCompatActivity {
         productList.clear();
         productList.addAll(sanphamDAO.searchProducts(keyword));
         adapter.notifyDataSetChanged();
+    }
+    private void filterProductsByCategory(String category) {
+        // Update your product list adapter here
+        productList.clear();
+        productList.addAll(sanphamDAO.getProductsByCategory(category));
+        adapter.notifyDataSetChanged();
+
     }
 }

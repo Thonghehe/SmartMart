@@ -2,6 +2,7 @@ package com.example.smartmart;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,8 +51,15 @@ public class OrderDetailActivity extends AppCompatActivity {
         loadOrderDetails(orderId);
 
         // Set button click listener to change order status
-        btnChangeTrangThai.setOnClickListener(v -> {
-            // Update order status logic here
+        btnChangeTrangThai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Update the order status to 2
+                dbHelper.updateOrderStatus(order.getMaDonHang(), 2);
+
+                // Hide the button
+                btnChangeTrangThai.setVisibility(View.GONE);
+            }
         });
 
         // Set back button click listener
@@ -73,6 +81,9 @@ public class OrderDetailActivity extends AppCompatActivity {
             DecimalFormat decimalFormat = new DecimalFormat("#,##0,000");
             tvTotalAmount.setText(
                     "Tổng đơn hàng: " + decimalFormat.format(order.getTongGia()) + " đ");
+            if (!order.getTrangThai().equals("1")) {
+                btnChangeTrangThai.setVisibility(View.GONE);
+            }
         }
     }
 
