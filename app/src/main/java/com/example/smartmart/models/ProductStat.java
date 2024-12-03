@@ -6,6 +6,15 @@ public class ProductStat {
     private double price;
     private int salesCount;
     private int rank;
+    private String saleDate;
+
+    public String getSaleDate() {
+        return saleDate;
+    }
+
+    public void setSaleDate(String saleDate) {
+        this.saleDate = saleDate;
+    }
 
     public int getId() {
         return id;

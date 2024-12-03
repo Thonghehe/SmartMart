@@ -37,9 +37,10 @@
             android:exported="false" />
         <activity
             android:name=".ProductStatsActivity"
-            android:exported="false" /> <!-- <activity -->
-        <!-- android:name=".ProductManagementFragment" -->
-        <!-- android:exported="false" /> -->
+            android:exported="false" />
+         <activity
+         android:name=".ProductManagementActivity"
+         android:exported="false" />
         <activity
             android:name=".GioHang"
             android:exported="false" />
